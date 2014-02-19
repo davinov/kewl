@@ -8,11 +8,10 @@ app.config([
 
     $routeProvider
       .when('/', templateUrl: '/partials/home.html')
-      .when('/404', templateUrl: '/partials/404.html')
-      .otherwise(redirectTo: '/404')
+      .otherwise(redirectTo: '/')
 
     # Beautify Urls: remove hashbang #! before routes
-    $locationProvider.html5Mode true
+    $locationProvider.html5Mode false
 
     # Allow cross-domain http requests
     delete $httpProvider.defaults.headers.common['X-Requested-With']
