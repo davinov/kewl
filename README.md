@@ -1,14 +1,9 @@
-Brunch skeleton [![Build Status](https://travis-ci.org/vbrajon/brunch-skeleton.png?branch=master)](https://travis-ci.org/vbrajon/brunch-skeleton) [![Coverage Status](https://coveralls.io/repos/vbrajon/brunch-skeleton/badge.png)](https://coveralls.io/r/vbrajon/brunch-skeleton)
-===============
-
-:skull: Minimalistic Skeleton for Brunch including cool stuff
-
-![image](https://github.com/vbrajon/brunch-skeleton/raw/master/app/assets/veggie-skeleton.jpg "Veggie Skeleton")
+# Kewl brunch skeleton
+:heart: Result of the infinite love of AngularJS and APIs
 
 ----------------
 
-Technologies
-------------
+## Technologies
 
 ### Languages
 - [Coffeescript](http://coffeescript.org/)
@@ -21,15 +16,41 @@ Technologies
 - [Bootstrap3](http://getbootstrap.com/)
 - [FontAwesome4](http://fontawesome.io/)
 
-Requirements
-------------
+## Requirements
 
 - [NodeJS](http://nodejs.org/)
 
-Installation
-------------
+## Installation
 
-    git clone https://github.com/vbrajon/brunch-skeleton.git && cd brunch-skeleton
-    sudo npm install -g brunch bower
-    npm install
-    npm start
+    brunch new gh:davinov/kewl
+
+## Development server
+
+`npm start` or `bunch watch --server`
+
+## Build for production
+
+    brunch build --production
+
+## Deploy on GitHub Pages
+
+Client-side only
+- Init a git repository in public folder
+
+        cd public
+        git init
+        git branch -m master gh-pages
+        git remote add origin [github repository address]
+
+- Build changes if necessary
+- Commit your changes in public/ folder and upload them
+
+        git add .
+        git commit
+        git push
+
+This last procedure is automated in `publidh-on-github.sh`.
+
+## Thanks
+
+Based on @vbrajon's [brunch skeleton](https://github.com/vbrajon/brunch-skeleton)
