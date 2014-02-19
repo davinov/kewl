@@ -7,12 +7,10 @@ app.config([
   '$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider.when('/', {
       templateUrl: '/partials/home.html'
-    }).when('/404', {
-      templateUrl: '/partials/404.html'
     }).otherwise({
-      redirectTo: '/404'
+      redirectTo: '/'
     });
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(false);
     return delete $httpProvider.defaults.headers.common['X-Requested-With'];
   }
 ]);

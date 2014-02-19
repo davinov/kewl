@@ -1,10 +1,5 @@
 angular.module('partials', [])
 .run(['$templateCache', function($templateCache) {
-  return $templateCache.put('/partials/404.html', [
-'',
-'<h1>:( Not Found /!\</h1>',''].join("\n"));
-}])
-.run(['$templateCache', function($templateCache) {
   return $templateCache.put('/partials/home.html', [
 '',
 '<h1 class="text-center">Welcome 2 Brunch-Skeleton</h1>',
