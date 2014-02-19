@@ -1,23 +1,27 @@
 {
-    "name": "Kewl",
-    "version": "1.0.0",
-    "main": "public/app.js",
-    "dependencies": {
-        "bootstrap": "*",
-        "font-awesome": "*",
-        "angular": "*",
-        "angular-route": "*",
-        "angular-bootstrap": "*"
+  "name": "Kewl",
+  "version": "0.0.0",
+  "main": "public/app.js",
+  "dependencies": {
+    "bootstrap": "*",
+    "font-awesome": "*",
+    "angular": "*",
+    "angular-route": "*",
+    "angular-bootstrap": "*",
+    "bootswatch": "*"
+  },
+  "devDependencies": {
+    "angular-mocks": "*"
+  },
+  "overrides": {
+    "font-awesome": {
+      "main": "./font-awesome.css"
     },
-    "devDependencies": {
-        "angular-mocks": "*"
+    "jquery": {
+      "main": "./dist/jquery.js"
     },
-    "overrides": {
-        "font-awesome": {
-            "main": "./font-awesome.css"
-        },
-        "jquery": {
-            "main": "./dist/jquery.js"
-        }
+    "bootswatch": {
+      "main": "./lumen/bootstrap.css"
     }
+  }
 }
