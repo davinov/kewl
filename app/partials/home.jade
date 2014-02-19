@@ -1,0 +1,22 @@
+h1.text-center Welcome 2 Brunch-Skeleton
+
+accordion
+    accordion-group(heading="Link repository")
+        a(href="https://github.com/vbrajon/brunch-skeleton") vbrajon/brunch-skeleton
+    accordion-group(heading="Readme.md")
+        include ../../README.md
+    accordion-group(heading="Font-awesome")
+        i.icon.icon-gears
+    accordion-group(heading="Angular filter")
+        span(data-ng-bind="'hey, capitalize me !'|capitalize")
+    accordion-group(heading="Fancy Jade stuff", is-open='true')
+        :markdown
+            > Jade template precompile markdown, coffeescript and include files before being served
+
+            This look like `include ../../README.md` or
+            ```
+            :coffeescript
+                console.log Object.keys(window)
+            ```
+
+            <alert><strong>Note:</strong> angular prevent inline script execution, yeah !</alert>

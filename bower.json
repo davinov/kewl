@@ -1,0 +1,23 @@
+{
+    "name": "Kewl",
+    "version": "1.0.0",
+    "main": "public/app.js",
+    "dependencies": {
+        "bootstrap": "*",
+        "font-awesome": "*",
+        "angular": "*",
+        "angular-route": "*",
+        "angular-bootstrap": "*"
+    },
+    "devDependencies": {
+        "angular-mocks": "*"
+    },
+    "overrides": {
+        "font-awesome": {
+            "main": "./font-awesome.css"
+        },
+        "jquery": {
+            "main": "./dist/jquery.js"
+        }
+    }
+}

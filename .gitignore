@@ -1,0 +1,36 @@
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+
+# OS or Editor folders
+.DS_Store
+.cache
+.project
+.settings
+.tmproj
+.idea
+nbproject
+Thumbs.db
+
+# NPM + Bower
+node_modules/
+bower_components/
+
+# Brunch
+public/
+tmp/
+
+# File pre-compiled by static jade
+app/assets/partials/
+app/assets/index.html
+
+# Coveralls
+coverage/

@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - "0.10"
+
+script:
+  - karma start karma.coffee --no-auto-watch --single-run
+
+after_success:
+  - cat "$(find coverage/ -name "*.info")" | ./node_modules/coveralls/bin/coveralls.js
