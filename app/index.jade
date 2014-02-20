@@ -1,19 +1,24 @@
 !!! 5
 html(lang='en', data-ng-app='kewl')
-    head
-        title Kewl brunch skeleton
-        link(rel='stylesheet', href='css/app.css')
-        link(rel='icon', type='image/x-icon', href='favicon.ico')
-        meta(charset='utf-8')
-    body
-        .navbar.navbar-default
-            .container
-                a.navbar-brand(href='.') Angular <3 APIs = Kewl
+  head
+    title Kewl brunch skeleton
+    link(rel='stylesheet', href='css/app.css')
+    link(rel='icon', type='image/x-icon', href='favicon.ico')
+    meta(charset='utf-8')
+  body
+    .navbar.navbar-default
+      .container
+        a.navbar-brand(href='.') Angular <3 APIs = Kewl
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href='https://github.com/davinov/kewl')
+              i.icon.icon-github
+              |  Source code on GitHub
 
-        main.container(data-ng-view)
+    main.container(data-ng-view)
 
-        :coffeescript
-            window.onload = -> console.log Object.keys(window)
-        script(src='js/vendor.js')
-        script(src='js/partials.js')
-        script(src='js/app.js')
+    :coffeescript
+      window.onload = -> console.log Object.keys(window)
+    script(src='js/vendor.js')
+    script(src='js/partials.js')
+    script(src='js/app.js')
