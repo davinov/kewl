@@ -1,1 +1,25 @@
-"use strict";var app;app=angular.module("kewl",["ng","ngRoute","ui.bootstrap","partials"]),app.config(["$routeProvider","$locationProvider","$httpProvider",function(e,t,r){return e.when("/",{templateUrl:"/partials/home.html"}).otherwise({redirectTo:"/"}),t.html5Mode(!1),delete r.defaults.headers.common["X-Requested-With"]}]),app.filter("capitalize",function(){return function(e){return e?e.charAt(0).toUpperCase()+e.slice(1):void 0}});
+'use strict';
+var app;
+
+app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'partials']);
+
+app.config([
+  '$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+    $routeProvider.when('/', {
+      templateUrl: '/partials/home.html'
+    }).otherwise({
+      redirectTo: '/'
+    });
+    $locationProvider.html5Mode(false);
+    return delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  }
+]);
+;app.filter('capitalize', function() {
+  return function(input) {
+    if (input) {
+      return input.charAt(0).toUpperCase() + input.slice(1);
+    }
+  };
+});
+;
+//# sourceMappingURL=app.js.map
