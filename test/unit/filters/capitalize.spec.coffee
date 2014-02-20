@@ -1,6 +1,6 @@
 'use strict'
 describe 'filters', ->
-  beforeEach module('skeleton')
+  beforeEach module('kewl')
 
   describe 'capitalize', ->
     it 'should capitalize a string', inject((capitalizeFilter) ->

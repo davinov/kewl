@@ -33,3 +33,72 @@ ol
         You can publish you client-side app really easily on Github pages by inititing a repo in your `public` folder,
         switching to gh-pages branch, commiting all files there and pushing to your repo on Github.
         See the README file for more info.
+
+
+  li
+    h2 Creating our backend with Express
+      small  Love at the first sight
+
+    :markdown
+      Let's create some backend for our brand new Angular app.
+      Having a REST API as a backend is a great choice, as it's allow other developers to create easily new fontends to
+      use the data it exposes (native mobile apps, desktop apps,...) and interacts with others services.
+      The easy syntax of [Express.js](http://expressjs.com/) will help us creating one easily.
+
+      #### Serving our front-end with Express
+      As Brunch's basic server do, we need to send the user our static files (the Angular frontend).
+      After Express's install with `npm install express --save`, we create a new `server/api.coffee` file containing :
+
+          express = require 'express'
+          path = require 'path'
+
+          # Configuration
+          api = express()
+          api.set 'title', 'Kewl'
+
+          # Frontend static files
+          api.use express.static path.join __dirname, '../public'
+          api.get '/', (req, res) ->
+            res.sendfile 'index.html',
+            root: path.join __dirname, '../_client'
+
+          # API routes
+          # Will come later!
+
+          # Functions to start and stop the server
+          api.start = (port = 3333, path, callback) ->
+            api.listen port, callback
+            console.log 'Server listening at port ' + port
+          api.stop = (callback) ->
+            api.close callback
+
+          # Starting our server
+          api.start()
+
+      We can than start our server with `./node_modules/.bin/coffee server/api.coffee`.
+
+    .tip
+      :markdown
+        By installing globally CoffeeScript (`npm install -g coffeescript`), you can use only `coffee server/api.coffee`.
+
+    :markdown
+      #### Integrating Express with Brunch
+      As Brunch provide us an easy development server, we might want to continue using our `brunch watch --server` to
+      be the only requirement to start the app.
+      In Brunch config file `config.coffee`:
+
+          exports.config =
+            server:
+              path: 'server/server.coffee'
+
+      And in `server/server.coffee` :
+
+          # Called by brunch --server
+          api = require './api'
+          module.exports =
+            startServer: api.start
+            stopServer: api.stop
+
+      Now, `brunch watch --server` starts our Express serving our frontend, so the line `api.start()` is no longer
+      desired in `server/api.coffee`.
+

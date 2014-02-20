@@ -19,3 +19,5 @@ exports.config =
       pretty: yes
     jade_angular:
       modules_folder: 'partials'
+  server:
+    path: 'server/server.coffee'
