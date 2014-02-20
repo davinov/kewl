@@ -1,6 +1,6 @@
 'use strict'
 
-app = angular.module('skeleton', ['ng', 'ngRoute', 'ui.bootstrap', 'partials'])
+app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'partials'])
 
 app.config([
   '$routeProvider', '$locationProvider', '$httpProvider'
