@@ -7,3 +7,12 @@
   .alert;
   .alert-info;
 }
+
+@note-bg: #ffffa5; // PostIt color
+@note-border: darken(spin(@note-bg, -10), 5%);
+@note-text: @text-color;
+
+.note {
+  .alert;
+  .alert-variant(@note-bg; @note-border; @note-text);
+}

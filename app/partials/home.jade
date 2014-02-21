@@ -102,3 +102,20 @@ ol
       Now, `brunch watch --server` starts our Express serving our frontend, so the line `api.start()` is no longer
       desired in `server/api.coffee`.
 
+      ### Some basic routes
+
+      In this example, we'll create the most basic REST API of the world: one that handles a list of To Dos.
+
+    .note
+      :markdown
+        In a nutshell REST services are built around fours verbs:
+        - `GET` to aquire data
+        - `POST` to add data
+        - `PUT` to update data
+        - `DELETE` to remove data
+
+        E.g., to acquire this webpage's content, your browser is doing a `GET` request to the server that respond
+        with the code of the webpage. Same for the pictures, the fonts...
+        When you're submitting a form, it's generally a `POST` request.
+
+
