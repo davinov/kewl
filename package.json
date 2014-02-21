@@ -20,7 +20,8 @@
     "uglify-js-brunch": ">= 1.0 < 1.8",
     "clean-css-brunch": ">= 1.0 < 1.8",
     "auto-reload-brunch": ">= 1.0 < 1.8",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "coveralls": "*",

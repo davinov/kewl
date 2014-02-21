@@ -45,7 +45,7 @@ ol
       use the data it exposes (native mobile apps, desktop apps,...) and interacts with others services.
       The easy syntax of [Express.js](http://expressjs.com/) will help us creating one easily.
 
-      #### Serving our front-end with Express
+      ### Serving our front-end with Express
       As Brunch's basic server do, we need to send the user our static files (the Angular frontend).
       After Express's install with `npm install express --save`, we create a new `server/api.coffee` file containing :
 
@@ -118,4 +118,67 @@ ol
         with the code of the webpage. Same for the pictures, the fonts...
         When you're submitting a form, it's generally a `POST` request.
 
+        Request are addressed to an URL and can contain some extra data:
 
+            POST http://my-awesome-website.com/newsletter/subscription
+            {
+              email: 'give-me-spam@me.com'
+            }
+
+    :markdown
+      Let's implement a very easy example: a ToDo list.
+      Consider an array of ToDos like this:
+
+          [
+              id: 0
+              title: 'Buy chocolates'
+              details: 'Prefer the ones without liquor'
+              done: false
+            ,
+              id: 1
+              title: 'Buy flowers'
+              details: 'She prefers yellow ones'
+              done: false
+            ,
+              id: 2
+              title: 'Write a note'
+              details: 'To be put in the flowers'
+              done: true
+          ]
+
+      We need the following routes:
+      - `GET /todo` will send the list
+      - `POST /todo` will add an item
+      - `DELETE /todo/:id` will mark an id as done
+
+      Express makes easy to create this routes easily:
+
+          _ = require "lodash" # Needed for _.find method
+
+          # Configuration
+          api.use express.bodyParser() # Populates req.body
+
+          # To do storage
+          id = 2
+          toDo = []
+
+          # API routes
+          api.get '/todo', (req, res, next) ->
+            res.send toDo
+
+          api.post '/todo', (req, res, next) ->
+            newToDo = req.body
+            newToDo.done = false
+            id = id+1
+            newToDo.id = id
+            toDo.push newToDo
+            res.send newToDo
+
+          api.del '/todo/:id', (req, res, next) ->
+            toDoItem = _.find toDo, id: parseInt(req.params.id)
+            toDoItem.done = true
+            res.send toDoItem
+
+    .tip
+      :markdown
+        API are testable without any frontend with tools like [POSTMAN](http://getpostman.com).
