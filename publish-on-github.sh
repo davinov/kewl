@@ -1,4 +1,5 @@
 cd public
-git commit -a -m "$(date)"
+git add .
+git commit -m "$(date)"
 git push
 cd ..
