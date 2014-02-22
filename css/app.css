@@ -7444,6 +7444,16 @@ label {
 .note .alert-link {
   color: #3c3c3c;
 }
+.note a {
+  color: #555555;
+}
+.to-do.done {
+  color: #999999;
+}
+.to-do.done .panel-heading {
+  color: #999999;
+  text-decoration: line-through;
+}
 
 
 /*# sourceMappingURL=app.css.map*/
