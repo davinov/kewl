@@ -1,7 +1,7 @@
-@componentsPath: "../../bower_components";
+@componentsPath: "../bower_components";
 @import "@{componentsPath}/bootstrap/less/bootstrap.less";
 @import "@{componentsPath}/font-awesome/less/font-awesome.less";
-@import "overrides.less";
+@import "overrides";
 
 .tip {
   .alert;
@@ -15,4 +15,9 @@
 .note {
   .alert;
   .alert-variant(@note-bg; @note-border; @note-text);
+  a {
+    color: @note-text;
+  }
 }
+
+@import "todo/todo";

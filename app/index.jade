@@ -9,6 +9,11 @@ html(lang='en', data-ng-app='kewl')
     .navbar.navbar-default
       .container
         a.navbar-brand(href='.') Angular <3 APIs = Kewl
+        ul.nav.navbar-nav
+          li
+            a(href='#/todo')
+              i.icon.icon-list
+              |  To do list
         ul.nav.navbar-nav.navbar-right
           li
             a(href='https://github.com/davinov/kewl')
@@ -20,5 +25,4 @@ html(lang='en', data-ng-app='kewl')
     :coffeescript
       window.onload = -> console.log Object.keys(window)
     script(src='js/vendor.js')
-    script(src='js/partials.js')
     script(src='js/app.js')

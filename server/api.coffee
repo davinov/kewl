@@ -15,7 +15,7 @@ api.get '/', (req, res) ->
 
 # To do storage
 id = 3
-toDo = [
+toDoList = [
   id: 0
   title: 'Buy chocolates'
   details: 'Prefer the ones without liquor'
@@ -35,18 +35,18 @@ toDo = [
 # API routes
 
 api.get '/todo', (req, res, next) ->
-  res.send toDo
+  res.send toDoList
 
 api.post '/todo', (req, res, next) ->
   newToDo = req.body
   newToDo.done = false
   id = id+1
   newToDo.id = id
-  toDo.push newToDo
+  toDoList.push newToDo
   res.send newToDo
 
 api.del '/todo/:id', (req, res, next) ->
-  toDoItem = _.find toDo, id: parseInt(req.params.id)
+  toDoItem = _.find toDoList, id: parseInt(req.params.id)
   toDoItem.done = true
   res.send toDoItem
 

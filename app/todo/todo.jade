@@ -1,0 +1,6 @@
+h1 To do list
+
+accordion
+  accordion-group.to-do(ng-repeat='toDo in toDoList', heading='{{toDo.title}}', ng-class='{done: toDo.done}')
+    accordion-heading {{toDo.title}}
+    {{toDo.details}}

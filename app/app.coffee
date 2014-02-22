@@ -1,13 +1,13 @@
 'use strict'
 
-app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'partials'])
+app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'kewl.todo'])
 
 app.config([
   '$routeProvider', '$locationProvider', '$httpProvider'
   ($routeProvider, $locationProvider, $httpProvider) ->
 
     $routeProvider
-      .when('/', templateUrl: '/partials/home.html')
+      .when('/', templateUrl: 'home.html')
       .otherwise(redirectTo: '/')
 
     # Beautify Urls: remove hashbang #! before routes

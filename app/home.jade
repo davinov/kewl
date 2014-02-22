@@ -103,7 +103,6 @@ ol
       desired in `server/api.coffee`.
 
       ### Some basic routes
-
       In this example, we'll create the most basic REST API of the world: one that handles a list of To Dos.
 
     .note
@@ -160,25 +159,95 @@ ol
 
           # To do storage
           id = 2
-          toDo = []
+          toDoList = []
 
           # API routes
           api.get '/todo', (req, res, next) ->
-            res.send toDo
+            res.send toDoList
 
           api.post '/todo', (req, res, next) ->
             newToDo = req.body
             newToDo.done = false
             id = id+1
             newToDo.id = id
-            toDo.push newToDo
+            toDoList.push newToDo
             res.send newToDo
 
           api.del '/todo/:id', (req, res, next) ->
-            toDoItem = _.find toDo, id: parseInt(req.params.id)
+            toDoItem = _.find toDoList, id: parseInt(req.params.id)
             toDoItem.done = true
             res.send toDoItem
 
     .tip
       :markdown
         API are testable without any frontend with tools like [POSTMAN](http://getpostman.com).
+
+    :markdown
+      ### Angular way of interacting with the API
+      As interaction between a REST API is a common pattern in Angular apps, a module called
+      [ngResource](http://docs.angularjs.org/api/ngResource) provides us a useful `$resource` service to map objects
+      described in the API.
+
+      To install ngResource module :
+
+          bower install angular-resource
+          cd vendor
+          ln -s ../bower_components/angular-resource/angular-resource.js 17-angular-resource.js
+
+    .note
+      :markdown
+        Brunch normally uses the `main` attribute from `.bower.json` to detect the file he needs to include in vendors
+        (it's the strategy used by the [angular-brunch-seed](https://github.com/scotch/angular-brunch-seed).
+        Symlinking the files we want to include seems better to me though as we can inlude other files, control their
+        order (alse possible with `before` and `after` tags in brunch's `config.coffee) and avoir Brunch's warning when
+        a `.bower.json` is missing (often the case!).
+
+    :markdown
+      Let's create a new module `kewl.todo` in our app in a `toDo` folder ([modularized folder
+      structure](http://www.johnpapa.net/angular-growth-structure/)):
+
+    tabset
+      tab(heading='todo/todo.coffee')
+        pre.
+          todo = angular.module 'kewl.todo', ['ng', 'ngRoute', 'ui.bootstrap', 'ngResource']
+
+          todo.config [
+            '$routeProvider'
+            ($routeProvider) ->
+              $routeProvider
+              .when '/todo', templateUrl: 'todo/todo.html', controller: 'toDoController'
+                ]
+                todo.controller 'toDoController', [
+            '$scope', 'ToDoList'
+            ($scope, ToDoList) ->
+            $scope.toDoList = ToDoList.query()
+          ]
+
+          todo.factory 'ToDoList', [
+              '$resource'
+              ($resource) ->
+                $resource 'todo/:id'
+            ]
+      tab(heading='todo/todo.jade')
+        pre.
+          h1 To do list
+
+          accordion
+          accordion-group.to-do(ng-repeat='toDo in toDoList', heading='{{toDo.title}}', ng-class='{done: toDo.done}')
+            accordion-heading {{toDo.title}}
+            {{toDo.details}}
+      tab(heading='todo/todo.less')
+        pre.
+          .to-do {
+            &.done {
+              .text-muted;
+              .panel-heading {
+                .text-muted;
+                text-decoration: line-through;
+              }
+            }
+          }
+
+
+
+
