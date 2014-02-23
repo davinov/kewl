@@ -476,6 +476,17 @@ issue by counting the number of request waiting:</p>
 batarang</a>
 extension for Chrome.</p>
 
-    </div>
+    </div><p>In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
+Let&#39;s handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).</p>
+<p>  app.factory &#39;loadingInterceptor&#39;, [
+  &#39;$rootScope&#39;
+  ($rootScope) -&gt;
+    [...]
+    responseError: (rejection) -&gt;</p>
+<pre><code>  # Do something when recieving an error
+  $rootScope.loading--
+  rejection
+</code></pre><p>  ]</p>
+
   </li>
 </ol>
