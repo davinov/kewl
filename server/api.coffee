@@ -6,6 +6,9 @@ _ = require 'lodash'
 api = express()
 api.set 'title', 'Kewl'
 api.use express.bodyParser()
+api.use express.cookieParser()
+api.use express.cookieSession
+  secret: 'thisIsNotSoSecret'
 
 # Frontend static files
 api.use express.static path.join __dirname, '../public'
@@ -36,12 +39,25 @@ toDoList = [
 waitOneSecond = (req, res, next) ->
   setTimeout next, 1000
 
+# Authentification management
+api.get '/login', (req, res, next) ->
+  req.session = 'logged in'
+  res.send 'You are authenticated'
+
+api.get '/logout', (req, res, next) ->
+  req.session = null
+  res.send 'You successfully logged out'
+
+ensureAuthenticated = (req, res, next) ->
+  return res.send 401, 'You need to log in first' if req.session != 'logged in'
+  next()
+
 # API routes
 
-api.get '/todo', waitOneSecond, (req, res, next) ->
+api.get '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
   res.send toDoList
 
-api.post '/todo', waitOneSecond, (req, res, next) ->
+api.post '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
   newToDo = req.body
   newToDo.done = false
   id = id+1
@@ -49,9 +65,9 @@ api.post '/todo', waitOneSecond, (req, res, next) ->
   toDoList.push newToDo
   res.send newToDo
 
-api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+api.del '/todo/:id', ensureAuthenticated, waitOneSecond, (req, res, next) ->
   toDoItem = _.find toDoList, id: parseInt(req.params.id)
-  return res.send 404, 'No task with the id ' + req.params.id if !toDoItem
+  return res.send 404, 'No task with the id ' + req.params.id if not toDoItem
   return res.send 400, 'This task is already done' if toDoItem.done
   toDoItem.done = true
   res.send toDoItem

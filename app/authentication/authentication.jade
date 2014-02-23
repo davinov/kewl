@@ -1,0 +1,14 @@
+h1 Authentication
+
+.row
+  button.login(ng-click='login()')
+    i.icon.icon-sign-in
+    |  Log in
+
+  button.logout(ng-click='logout()')
+    i.icon.icon-sign-out
+    |  Log out
+
+.messages
+  .message(ng-repeat='message in messages')
+    {{message}}

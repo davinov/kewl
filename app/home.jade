@@ -567,7 +567,7 @@ ol
       As we're talking about errors, sometimes, the API is sending some errors that should be displayed to the user:
       identification failures, inexistant object, wrong route...
 
-      E.g, we should return a 'bad request' error when trying to mark as done a task that is already done:
+      E.g., we should return a 'bad request' error when trying to mark as done a task that is already done:
 
     hljs(language='coffeescript').
       api.del '/todo/:id', waitOneSecond, (req, res, next) ->
@@ -639,3 +639,135 @@ ol
             bottom: @padding-large-vertical;
             margin: auto;
           }
+
+    :markdown
+      #### Authentication manager
+
+      APIs sometimes need to autenticate to access some data. If not, a 401 'unauthorized' response is thrown.
+
+      This is a really simple authentification management in our `api.coffee` server:
+
+    hljs(language='coffeescript').
+      # Configuration
+      [...]
+      api.use express.cookieParser()
+      api.use express.cookieSession
+        secret: 'thisIsNotSoSecret'
+
+      # Authentification management
+      api.get '/login', (req, res, next) ->
+        req.session = 'logged in'
+        res.send 'You are authenticated'
+
+      api.get '/logout', (req, res, next) ->
+        req.session = null
+        res.send 'You successfully logged out'
+
+      ensureAuthenticated = (req, res, next) ->
+        return res.send 401, 'You need to log in first' if req.session != 'logged in'
+        next()
+
+      # API routes
+      api.get '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+
+      api.post '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+
+      api.del '/todo/:id', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+
+    :markdown
+      And a simple module using `$http` to provide log in and log out buttons:
+
+    tabset
+      tab(heading='authentication/authentication.coffee')
+        hljs(language='coffeescript').
+          auth = angular.module 'kewl.authentication', ['ng', 'ngRoute', 'ui.bootstrap']
+
+          auth.config [
+            '$routeProvider'
+            ($routeProvider) ->
+
+              $routeProvider
+                .when '/authentication', templateUrl: 'authentication/authentication.html', controller: 'authenticationController'
+
+          ]
+
+          auth.controller 'authenticationController', [
+            '$scope', '$http', '$timeout'
+            ($scope, $http, $timeout) ->
+              $scope.messages = []
+              displayMessage = (message) ->
+                $scope.messages.push message
+                $timeout ->
+                  $scope.messages.shift()
+                , 2500
+
+              $scope.login = ->
+                $http
+                  method: 'GET'
+                  url: 'login'
+                .success displayMessage
+
+              $scope.logout = ->
+                $http
+                  method: 'GET'
+                  url: 'logout'
+                .success displayMessage
+          ]
+
+      tab(heading='authentication/authentication.jade')
+        pre.
+          h1 Authentication
+
+          .row
+            button.login(ng-click='login()')
+              i.icon.icon-sign-in
+              |  Log in
+
+            button.logout(ng-click='logout()')
+              i.icon.icon-sign-out
+              |  Log out
+
+          .messages
+            .message(ng-repeat='message in messages')
+              {{message}}
+
+      tab(heading='authentication/authentication.less')
+        pre.
+          .login, .logout {
+            .btn;
+            .btn-lg;
+            .make-xs-column(3);
+          }
+
+          .login {
+            .btn-success;
+            .make-xs-column-offset(1);
+          }
+
+          .logout {
+            .btn-danger;
+            .make-xs-column-offset(4);
+          }
+
+          .messages {
+            .row;
+            margin-top: @padding-base-vertical;
+            .message {
+              .alert;
+              .alert-info;
+            }
+          }
+
+      tab(heading='app.coffee')
+        hljs(language='coffeescript').
+          app = angular.module 'kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo', 'kewl.authentication']
+          [...]
+
+      tab(heading='app.less')
+        pre.
+          [...]
+          @import "authentication/authentication";
+

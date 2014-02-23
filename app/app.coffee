@@ -1,10 +1,10 @@
 'use strict'
 
-app = angular.module 'kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo']
+app = angular.module 'kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo', 'kewl.authentication']
 
 app.config [
-  '$routeProvider', '$locationProvider', '$httpProvider'
-  ($routeProvider, $locationProvider, $httpProvider) ->
+  '$routeProvider', '$locationProvider', '$httpProvider', 'hljsServiceProvider'
+  ($routeProvider, $locationProvider, $httpProvider, hljsServiceProvider) ->
 
     $routeProvider
       .when('/', templateUrl: 'home.html')
@@ -15,6 +15,9 @@ app.config [
 
     # Register intercetors
     $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
+
+    hljsServiceProvider.setOptions
+      tabReplace: '  '
 ]
 
 app.factory 'loadingInterceptor', [
