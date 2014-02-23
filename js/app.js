@@ -27,6 +27,10 @@ app.factory('loadingInterceptor', [
       response: function(response) {
         $rootScope.loading--;
         return response;
+      },
+      responseError: function(rejection) {
+        $rootScope.loading--;
+        return rejection;
       }
     };
   }
