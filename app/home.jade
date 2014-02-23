@@ -509,4 +509,26 @@ ol
             [...]
             res.send toDoItem
 
+    :markdown
+      You'll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
+      issue by counting the number of request waiting:
 
+          app.factory 'loadingInterceptor', [
+            '$rootScope'
+            ($rootScope) ->
+              $rootScope.loading = 0
+              request: (request) ->
+                # Do something when sending the request
+                $rootScope.loading++
+                request
+              response: (response) ->
+                # Do something when recieving the response
+                $rootScope.loading--
+                response
+          ]
+
+    .tip
+      :markdown
+        You can visualize variables in scopes by enabling the [AngularJS
+        batarang](https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk)
+        extension for Chrome.
