@@ -5609,7 +5609,9 @@ button.close {
 .panel-body:before,
 .panel-body:after,
 .modal-footer:before,
-.modal-footer:after {
+.modal-footer:after,
+.messages:before,
+.messages:after {
   content: " ";
   display: table;
 }
@@ -5626,7 +5628,8 @@ button.close {
 .navbar-collapse:after,
 .pager:after,
 .panel-body:after,
-.modal-footer:after {
+.modal-footer:after,
+.messages:after {
   clear: both;
 }
 .center-block {
@@ -7113,6 +7116,150 @@ button.close {
 .icon-plus-square-o:before {
   content: "\f196";
 }
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org>
+
+*/
+.hljs {
+  display: block;
+  padding: 0.5em;
+  background: #F0F0F0;
+}
+.hljs,
+.hljs-subst,
+.hljs-tag .hljs-title,
+.lisp .hljs-title,
+.clojure .hljs-built_in,
+.nginx .hljs-title {
+  color: black;
+}
+.hljs-string,
+.hljs-title,
+.hljs-constant,
+.hljs-parent,
+.hljs-tag .hljs-value,
+.hljs-rules .hljs-value,
+.hljs-rules .hljs-value .hljs-number,
+.hljs-preprocessor,
+.hljs-pragma,
+.haml .hljs-symbol,
+.ruby .hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.hljs-aggregate,
+.hljs-template_tag,
+.django .hljs-variable,
+.smalltalk .hljs-class,
+.hljs-addition,
+.hljs-flow,
+.hljs-stream,
+.bash .hljs-variable,
+.apache .hljs-tag,
+.apache .hljs-cbracket,
+.tex .hljs-command,
+.tex .hljs-special,
+.erlang_repl .hljs-function_or_atom,
+.asciidoc .hljs-header,
+.markdown .hljs-header,
+.coffeescript .hljs-attribute {
+  color: #800;
+}
+.smartquote,
+.hljs-comment,
+.hljs-annotation,
+.hljs-template_comment,
+.diff .hljs-header,
+.hljs-chunk,
+.asciidoc .hljs-blockquote,
+.markdown .hljs-blockquote {
+  color: #888;
+}
+.hljs-number,
+.hljs-date,
+.hljs-regexp,
+.hljs-literal,
+.hljs-hexcolor,
+.smalltalk .hljs-symbol,
+.smalltalk .hljs-char,
+.go .hljs-constant,
+.hljs-change,
+.lasso .hljs-variable,
+.makefile .hljs-variable,
+.asciidoc .hljs-bullet,
+.markdown .hljs-bullet,
+.asciidoc .hljs-link_url,
+.markdown .hljs-link_url {
+  color: #080;
+}
+.hljs-label,
+.hljs-javadoc,
+.ruby .hljs-string,
+.hljs-decorator,
+.hljs-filter .hljs-argument,
+.hljs-localvars,
+.hljs-array,
+.hljs-attr_selector,
+.hljs-important,
+.hljs-pseudo,
+.hljs-pi,
+.haml .hljs-bullet,
+.hljs-doctype,
+.hljs-deletion,
+.hljs-envvar,
+.hljs-shebang,
+.apache .hljs-sqbracket,
+.nginx .hljs-built_in,
+.tex .hljs-formula,
+.erlang_repl .hljs-reserved,
+.hljs-prompt,
+.asciidoc .hljs-link_label,
+.markdown .hljs-link_label,
+.vhdl .hljs-attribute,
+.clojure .hljs-attribute,
+.asciidoc .hljs-attribute,
+.lasso .hljs-attribute,
+.coffeescript .hljs-property,
+.hljs-phony {
+  color: #8888ff;
+}
+.hljs-keyword,
+.hljs-id,
+.hljs-title,
+.hljs-built_in,
+.hljs-aggregate,
+.css .hljs-tag,
+.hljs-javadoctag,
+.hljs-phpdoc,
+.hljs-yardoctag,
+.smalltalk .hljs-class,
+.hljs-winutils,
+.bash .hljs-variable,
+.apache .hljs-tag,
+.go .hljs-typename,
+.tex .hljs-command,
+.asciidoc .hljs-strong,
+.markdown .hljs-strong,
+.hljs-request,
+.hljs-status {
+  font-weight: bold;
+}
+.asciidoc .hljs-emphasis,
+.markdown .hljs-emphasis {
+  font-style: italic;
+}
+.nginx .hljs-built_in {
+  font-weight: normal;
+}
+.coffeescript .javascript,
+.javascript .xml,
+.lasso .markup,
+.tex .hljs-formula,
+.xml .javascript,
+.xml .vbscript,
+.xml .css,
+.xml .hljs-cdata {
+  opacity: 0.5;
+}
 .navbar {
   border-width: 0 1px 4px 1px;
 }
@@ -8012,6 +8159,283 @@ fieldset[disabled] .to-do.new textarea {
 }
 textarea.to-do.new textarea {
   height: auto;
+}
+.login,
+.logout {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-width: 0 1px 4px 1px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 5px;
+  position: relative;
+  float: left;
+  width: 25%;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.login:focus,
+.logout:focus,
+.login:active:focus,
+.logout:active:focus,
+.login.active:focus,
+.logout.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.login:hover,
+.logout:hover,
+.login:focus,
+.logout:focus {
+  color: #555555;
+  text-decoration: none;
+}
+.login:active,
+.logout:active,
+.login.active,
+.logout.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.login.disabled,
+.logout.disabled,
+.login[disabled],
+.logout[disabled],
+fieldset[disabled] .login,
+fieldset[disabled] .logout {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.login:hover,
+.logout:hover {
+  margin-top: 1px;
+  border-bottom-width: 3px;
+}
+.login:active,
+.logout:active {
+  margin-top: 2px;
+  border-bottom-width: 2px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.login-default:hover,
+.logout-default:hover,
+.login-default:focus,
+.logout-default:focus,
+.login-group.open .dropdown-toggle.btn-default,
+.logout-group.open .dropdown-toggle.btn-default {
+  background-color: #eeeeee;
+  border-color: #e2e2e2;
+}
+.login-primary:hover,
+.logout-primary:hover,
+.login-primary:focus,
+.logout-primary:focus,
+.login-group.open .dropdown-toggle.btn-primary,
+.logout-group.open .dropdown-toggle.btn-primary {
+  background-color: #158cba;
+  border-color: #127ba3;
+}
+.login-success:hover,
+.logout-success:hover,
+.login-success:focus,
+.logout-success:focus,
+.login-group.open .dropdown-toggle.btn-success,
+.logout-group.open .dropdown-toggle.btn-success {
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.login-info:hover,
+.logout-info:hover,
+.login-info:focus,
+.logout-info:focus,
+.login-group.open .dropdown-toggle.btn-info,
+.logout-group.open .dropdown-toggle.btn-info {
+  background-color: #75caeb;
+  border-color: #5fc1e8;
+}
+.login-warning:hover,
+.logout-warning:hover,
+.login-warning:focus,
+.logout-warning:focus,
+.login-group.open .dropdown-toggle.btn-warning,
+.logout-group.open .dropdown-toggle.btn-warning {
+  background-color: #ff851b;
+  border-color: #ff7701;
+}
+.login-danger:hover,
+.logout-danger:hover,
+.login-danger:focus,
+.logout-danger:focus,
+.login-group.open .dropdown-toggle.btn-danger,
+.logout-group.open .dropdown-toggle.btn-danger {
+  background-color: #ff4136;
+  border-color: #ff291c;
+}
+.login-group.open .dropdown-toggle,
+.logout-group.open .dropdown-toggle {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.login {
+  color: #ffffff;
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.login:hover,
+.login:focus,
+.login:active,
+.login.active,
+.open .dropdown-toggle.login {
+  color: #ffffff;
+  background-color: #219524;
+  border-color: #186f1b;
+}
+.login:active,
+.login.active,
+.open .dropdown-toggle.login {
+  background-image: none;
+}
+.login.disabled,
+.login[disabled],
+fieldset[disabled] .login,
+.login.disabled:hover,
+.login[disabled]:hover,
+fieldset[disabled] .login:hover,
+.login.disabled:focus,
+.login[disabled]:focus,
+fieldset[disabled] .login:focus,
+.login.disabled:active,
+.login[disabled]:active,
+fieldset[disabled] .login:active,
+.login.disabled.active,
+.login[disabled].active,
+fieldset[disabled] .login.active {
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.login .badge {
+  color: #28b62c;
+  background-color: #ffffff;
+}
+@media (min-width: 480px) {
+  .login {
+    margin-left: 8.333333333333332%;
+  }
+}
+.logout {
+  color: #ffffff;
+  background-color: #ff4136;
+  border-color: #ff291c;
+}
+.logout:hover,
+.logout:focus,
+.logout:active,
+.logout.active,
+.open .dropdown-toggle.logout {
+  color: #ffffff;
+  background-color: #ff1a0d;
+  border-color: #de0c00;
+}
+.logout:active,
+.logout.active,
+.open .dropdown-toggle.logout {
+  background-image: none;
+}
+.logout.disabled,
+.logout[disabled],
+fieldset[disabled] .logout,
+.logout.disabled:hover,
+.logout[disabled]:hover,
+fieldset[disabled] .logout:hover,
+.logout.disabled:focus,
+.logout[disabled]:focus,
+fieldset[disabled] .logout:focus,
+.logout.disabled:active,
+.logout[disabled]:active,
+fieldset[disabled] .logout:active,
+.logout.disabled.active,
+.logout[disabled].active,
+fieldset[disabled] .logout.active {
+  background-color: #ff4136;
+  border-color: #ff291c;
+}
+.logout .badge {
+  color: #ff4136;
+  background-color: #ffffff;
+}
+@media (min-width: 480px) {
+  .logout {
+    margin-left: 33.33333333333333%;
+  }
+}
+.messages {
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-top: 6px;
+}
+.messages .message {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  border-width: 0 1px 4px 1px;
+  background-color: #75caeb;
+  border-color: #40b5e3;
+  color: #ffffff;
+}
+.messages .message h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.messages .message .alert-link {
+  font-weight: bold;
+}
+.messages .message > p,
+.messages .message > ul {
+  margin-bottom: 0;
+}
+.messages .message > p + p {
+  margin-top: 5px;
+}
+.messages .message a,
+.messages .message .alert-link {
+  font-weight: normal;
+  color: #fff;
+  text-decoration: underline;
+}
+.messages .message hr {
+  border-top-color: #29ade0;
+}
+.messages .message .alert-link {
+  color: #e6e6e6;
 }
 
 

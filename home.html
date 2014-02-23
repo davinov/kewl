@@ -35,32 +35,35 @@ The easy syntax of <a href="http://expressjs.com/">Express.js</a> will help us c
 <h3 id="serving-our-front-end-with-express">Serving our front-end with Express</h3>
 <p>As Brunch&#39;s basic server do, we need to send the user our static files (the Angular frontend).
 After Express&#39;s install with <code>npm install express --save</code>, we create a new <code>server/api.coffee</code> file containing :</p>
-<pre><code>express = require &#39;express&#39;
-path = require &#39;path&#39;
 
-# Configuration
-api = express()
-api.set &#39;title&#39;, &#39;Kewl&#39;
-
-# Frontend static files
-api.use express.static path.join __dirname, &#39;../public&#39;
-api.get &#39;/&#39;, (req, res) -&gt;
-  res.sendfile &#39;index.html&#39;,
-  root: path.join __dirname, &#39;../_client&#39;
-
-# API routes
-# Will come later!
-
-# Functions to start and stop the server
-api.start = (port = 3333, path, callback) -&gt;
-  api.listen port, callback
-  console.log &#39;Server listening at port &#39; + port
-api.stop = (callback) -&gt;
-  api.close callback
-
-# Starting our server
-api.start()
-</code></pre><p>We can than start our server with <code>./node_modules/.bin/coffee server/api.coffee</code>.</p>
+    <hljs language="coffeescript">
+      express = require 'express'
+      path = require 'path'
+      
+      # Configuration
+      api = express()
+      api.set 'title', 'Kewl'
+      
+      # Frontend static files
+      api.use express.static path.join __dirname, '../public'
+      api.get '/', (req, res) ->
+        res.sendfile 'index.html',
+        root: path.join __dirname, '../_client'
+        
+      # API routes
+      # Will come later!
+      
+      # Functions to start and stop the server
+      api.start = (port = 3333, path, callback) ->
+        api.listen port, callback
+        console.log 'Server listening at port ' + port
+      api.stop = (callback) ->
+        api.close callback
+        
+      # Starting our server
+      api.start()
+      
+    </hljs><p>We can than start our server with <code>./node_modules/.bin/coffee server/api.coffee</code>.</p>
 
     <div class="tip"><p>By installing globally CoffeeScript (<code>npm install -g coffeescript</code>), you can use only <code>coffee server/api.coffee</code>.</p>
 
@@ -68,20 +71,26 @@ api.start()
 <p>As Brunch provide us an easy development server, we might want to continue using our <code>brunch watch --server</code> to
 be the only requirement to start the app.
 In Brunch config file <code>config.coffee</code>:</p>
-<pre><code>exports.config =
-  server:
-    path: &#39;server/server.coffee&#39;
-</code></pre><p>And in <code>server/server.coffee</code> :</p>
-<pre><code># Called by brunch --server
-api = require &#39;./api&#39;
-module.exports =
-  startServer: api.start
-  stopServer: api.stop
-</code></pre><p>Now, <code>brunch watch --server</code> starts our Express serving our frontend, so the line <code>api.start()</code> is no longer
-desired in <code>server/api.coffee</code>.</p>
-<h3 id="some-basic-routes">Some basic routes</h3>
-<p>In this example, we&#39;ll create the most basic REST API of the world: one that handles a list of To Dos.</p>
 
+    <hljs language="coffeescript">
+      exports.config =
+        server:
+          path: 'server/server.coffee'
+          
+    </hljs><p>And in <code>server/server.coffee</code> :</p>
+
+    <hljs language="coffeescript">
+      # Called by brunch --server
+      api = require './api'
+      module.exports =
+        startServer: api.start
+        stopServer: api.stop
+        
+    </hljs>
+    <Now>, `brunch watch --server` starts our Express serving our frontend, so the line `api.start()` is no longer
+      <desired>in `server/api.coffee`.</desired>### Some basic routes
+      <In>this example, we'll create the most basic REST API of the world: one that handles a list of To Dos.</In>
+    </Now>
     <div class="note"><p>In a nutshell REST services are built around fours verbs:</p>
 <ul>
 <li><code>GET</code> to aquire data</li>
@@ -100,55 +109,61 @@ When you&#39;re submitting a form, it&#39;s generally a <code>POST</code> reques
 </code></pre>
     </div><p>Let&#39;s implement a very easy example: a ToDo list.
 Consider an array of ToDos like this:</p>
-<pre><code>[
-    id: 0
-    title: &#39;Buy chocolates&#39;
-    details: &#39;Prefer the ones without liquor&#39;
-    done: false
-,
-    id: 1
-    title: &#39;Buy flowers&#39;
-    details: &#39;She prefers yellow ones&#39;
-    done: false
-,
-    id: 2
-    title: &#39;Write a note&#39;
-    details: &#39;To be put in the flowers&#39;
-    done: true
-]
-</code></pre><p>We need the following routes:</p>
+
+    <hljs language="coffeescript">
+      [
+          id: 0
+          title: 'Buy chocolates'
+          details: 'Prefer the ones without liquor'
+          done: false
+      ,
+          id: 1
+          title: 'Buy flowers'
+          details: 'She prefers yellow ones'
+          done: false
+      ,
+          id: 2
+          title: 'Write a note'
+          details: 'To be put in the flowers'
+          done: true
+      ]
+      
+    </hljs><p>We need the following routes:</p>
 <ul>
 <li><code>GET /todo</code> will send the list</li>
 <li><code>POST /todo</code> will add an item</li>
 <li><code>DELETE /todo/:id</code> will mark an id as done</li>
 </ul>
 <p>Express makes easy to create this routes easily:</p>
-<pre><code>_ = require &quot;lodash&quot; # Needed for _.find method
 
-# Configuration
-api.use express.bodyParser() # Populates req.body
-
-# To do storage
-id = 2
-toDoList = []
-
-# API routes
-api.get &#39;/todo&#39;, (req, res, next) -&gt;
-  res.send toDoList
-
-api.post &#39;/todo&#39;, (req, res, next) -&gt;
-  newToDo = req.body
-  newToDo.done = false
-  id = id+1
-  newToDo.id = id
-  toDoList.push newToDo
-  res.send newToDo
-
-api.del &#39;/todo/:id&#39;, (req, res, next) -&gt;
-  toDoItem = _.find toDoList, id: parseInt(req.params.id)
-  toDoItem.done = true
-  res.send toDoItem
-</code></pre>
+    <hljs language="coffeescript">
+      _ = require "lodash" # Needed for _.find method
+      
+      # Configuration
+      api.use express.bodyParser() # Populates req.body
+      
+      # To do storage
+      id = 2
+      toDoList = []
+      
+      # API routes
+      api.get '/todo', (req, res, next) ->
+        res.send toDoList
+        
+      api.post '/todo', (req, res, next) ->
+        newToDo = req.body
+        newToDo.done = false
+        id = id+1
+        newToDo.id = id
+        toDoList.push newToDo
+        res.send newToDo
+        
+      api.del '/todo/:id', (req, res, next) ->
+        toDoItem = _.find toDoList, id: parseInt(req.params.id)
+        toDoItem.done = true
+        res.send toDoItem
+        
+    </hljs>
     <div class="tip"><p>API are testable without any frontend with tools like <a href="http://getpostman.com">POSTMAN</a>.</p>
 
     </div><h3 id="angular-way-of-interacting-with-the-api">Angular way of interacting with the API</h3>
@@ -156,10 +171,13 @@ api.del &#39;/todo/:id&#39;, (req, res, next) -&gt;
 <a href="http://docs.angularjs.org/api/ngResource">ngResource</a> provides us a useful <code>$resource</code> service to map objects
 described in the API.</p>
 <p>To install ngResource module:</p>
-<pre><code>bower install angular-resource
-cd vendor
-ln -s ../bower_components/angular-resource/angular-resource.js 17-angular-resource.js
-</code></pre>
+
+    <hljs language="bash">
+      bower install angular-resource
+      cd vendor
+      ln -s ../bower_components/angular-resource/angular-resource.js 17-angular-resource.js
+      
+    </hljs>
     <div class="note"><p>Brunch normally uses the <code>main</code> attribute from <code>.bower.json</code> to detect the file he needs to include in vendors
 (it&#39;s the strategy used by the <a href="https://github.com/scotch/angular-brunch-seed">angular-brunch-seed</a>.
 Symlinking the files we want to include seems better to me though as we can inlude other files, control their
@@ -171,25 +189,27 @@ structure</a>):</p>
 
     <tabset>
       <tab heading="todo/todo.coffee">
-        <pre>todo = angular.module 'kewl.todo', ['ng', 'ngRoute', 'ui.bootstrap', 'ngResource']
-
-todo.config [
-  '$routeProvider'
-  ($routeProvider) ->
-    $routeProvider
-    .when '/todo', templateUrl: 'todo/todo.html', controller: 'toDoController'
-      ]
-      todo.controller 'toDoController', [
-  '$scope', 'ToDoList'
-  ($scope, ToDoList) ->
-  $scope.toDoList = ToDoList.query()
-]
-
-todo.factory 'ToDoList', [
-    '$resource'
-    ($resource) ->
-      $resource 'todo/:id'
-]</pre>
+        <hljs language="coffeescript">
+          todo = angular.module 'kewl.todo', ['ng', 'ngRoute', 'ui.bootstrap', 'ngResource']
+          
+          todo.config [
+            '$routeProvider'
+            ($routeProvider) ->
+              $routeProvider
+              .when '/todo', templateUrl: 'todo/todo.html', controller: 'toDoController'
+                ]
+                todo.controller 'toDoController', [
+            '$scope', 'ToDoList'
+            ($scope, ToDoList) ->
+            $scope.toDoList = ToDoList.query()
+          ]
+          
+          todo.factory 'ToDoList', [
+              '$resource'
+              ($resource) ->
+                $resource 'todo/:id'
+          ]
+        </hljs>
       </tab>
       <tab heading="todo/todo.jade">
         <pre>h1 To do list
@@ -215,34 +235,36 @@ accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}'
 
     <tabset>
       <tab heading="todo/todo.coffee">
-        <pre>todo.controller 'toDoController', [
-  '$scope', 'ToDoList'
-  ($scope, ToDoList) ->
-    $scope.refreshToDoList = ->
-      $scope.toDoList = ToDoList.query()
-      
-    $scope.sendButtonDisabled = false
-    $scope.newToDo =
-      title: ""
-      details: ""
-      
-    $scope.addNewToDo = ->
-      $scope.sendButtonDisabled = true
-      ToDoList.save $scope.newToDo, ->
-        $scope.newToDo =
-          title: ""
-          details: ""
-      $scope.sendButtonDisabled = false
-      $scope.refreshToDoList()
-      
-    $scope.markAsDone = (toDoItem) ->
-      ToDoList.delete
-        id: toDoItem.id
-      , ->
-        $scope.refreshToDoList()
-        
-    $scope.refreshToDoList() # Load the to-do list for the first time
-  ]</pre>
+        <hljs language="coffeescript">
+          todo.controller 'toDoController', [
+            '$scope', 'ToDoList'
+            ($scope, ToDoList) ->
+              $scope.refreshToDoList = ->
+                $scope.toDoList = ToDoList.query()
+                
+              $scope.sendButtonDisabled = false
+              $scope.newToDo =
+                title: ""
+                details: ""
+                
+              $scope.addNewToDo = ->
+                $scope.sendButtonDisabled = true
+                ToDoList.save $scope.newToDo, ->
+                  $scope.newToDo =
+                    title: ""
+                    details: ""
+                $scope.sendButtonDisabled = false
+                $scope.refreshToDoList()
+                
+              $scope.markAsDone = (toDoItem) ->
+                ToDoList.delete
+                  id: toDoItem.id
+                , ->
+                  $scope.refreshToDoList()
+                  
+              $scope.refreshToDoList() # Load the to-do list for the first time
+            ]
+        </hljs>
       </tab>
       <tab heading="todo/todo.jade">
         <pre>h1 To do list
@@ -317,38 +339,44 @@ not triggered.</p>
 requests before and after they&#39;re sent.</p>
 <h4 id="implementing-a-loading-indicator">Implementing a loading indicator</h4>
 <p>Interceptors are stored in the <code>$httpProvider.interceptor</code>. They are registered using <code>$httpProvider</code> like this:</p>
-<pre><code>$provide.factory &#39;myHttpInterceptor&#39;, -&gt;
-  request: (request) -&gt;
-    # Do something when sending the request
-    request
 
-  response: (response) -&gt;
-    # Do something when recieving the response
-    response
+    <hljs language="coffeescript">
+      $provide.factory 'myHttpInterceptor', ->
+        request: (request) ->
+          # Do something when sending the request
+          request
+          
+        response: (response) ->
+          # Do something when recieving the response
+          response
+          
+      $httpProvider.interceptors.push 'myHttpInterceptor'
+      
+    </hljs><p>To implement a loading indicator, we can add to our <code>app.coffee</code>:</p>
 
-$httpProvider.interceptors.push &#39;myHttpInterceptor&#39;
-</code></pre><p>To implement a loading indicator, we can add to our <code>app.coffee</code>:</p>
-<pre><code>app.factory &#39;loadingInterceptor&#39;, [
-  &#39;$rootScope&#39;
-  ($rootScope) -&gt;
-    request: (request) -&gt;
-      # Do something when sending the request
-      $rootScope.loading = true
-      request
-    response: (response) -&gt;
-      # Do something when recieving the response
-      $rootScope.loading = false
-      response
-]
-
-app.config [
-  &#39;$routeProvider&#39;, &#39;$locationProvider&#39;, &#39;$httpProvider&#39;
-  ($routeProvider, $locationProvider, $httpProvider) -&gt;
-    [...]
-    # Register loading intercetor
-    $httpProvider.interceptors.push &#39;loadingInterceptor&#39;
-]
-</code></pre><p>The <code>$rootScope.loading</code> variable can now be used to display an indicator, like the corner indicator from
+    <hljs language="coffeescript">
+      app.factory 'loadingInterceptor', [
+        '$rootScope'
+        ($rootScope) ->
+          request: (request) ->
+            # Do something when sending the request
+            $rootScope.loading = true
+            request
+          response: (response) ->
+            # Do something when recieving the response
+            $rootScope.loading = false
+            response
+      ]
+      
+      app.config [
+        '$routeProvider', '$locationProvider', '$httpProvider'
+        ($routeProvider, $locationProvider, $httpProvider) ->
+          [...]
+          # Register loading intercetor
+          $httpProvider.interceptors.push 'loadingInterceptor'
+      ]
+      
+    </hljs><p>The <code>$rootScope.loading</code> variable can now be used to display an indicator, like the corner indicator from
 <a href="http://tympanus.net/Development/CreativeLoadingEffects/">creative loading effects</a>:</p>
 
     <tabset>
@@ -440,93 +468,110 @@ app.config [
       </tab>
     </tabset><p>As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
 before our Express server to simulate some network latency:</p>
-<pre><code># Simulate network latency
-waitOneSecond = (req, res, next) -&gt;
-  setTimeout next, 1000
 
-# API routes
-api.get &#39;/todo&#39;, waitOneSecond, (req, res, next) -&gt;
-  res.send toDoList
-
-api.post &#39;/todo&#39;, waitOneSecond, (req, res, next) -&gt;
-  [...]
-  res.send newToDo
-
-api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
-  toDoItem = _.find toDoList, id: parseInt(req.params.id)
-  [...]
-  res.send toDoItem
-</code></pre><p>You&#39;ll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
+    <hljs language="coffeescript">
+      # Simulate network latency
+      waitOneSecond = (req, res, next) ->
+        setTimeout next, 1000
+        
+      # API routes
+      api.get '/todo', waitOneSecond, (req, res, next) ->
+        res.send toDoList
+        
+      api.post '/todo', waitOneSecond, (req, res, next) ->
+        [...]
+        res.send newToDo
+        
+      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+        toDoItem = _.find toDoList, id: parseInt(req.params.id)
+        [...]
+        res.send toDoItem
+        
+    </hljs><p>You&#39;ll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
 issue by counting the number of request waiting:</p>
-<pre><code>app.factory &#39;loadingInterceptor&#39;, [
-  &#39;$rootScope&#39;
-  ($rootScope) -&gt;
-    $rootScope.loading = 0
-    request: (request) -&gt;
-      # Do something when sending the request
-      $rootScope.loading++
-      request
-    response: (response) -&gt;
-      # Do something when recieving the response
-      $rootScope.loading--
-      response
-]
-</code></pre>
+
+    <hljs language="coffeescript">
+      app.factory 'loadingInterceptor', [
+        '$rootScope'
+        ($rootScope) ->
+          $rootScope.loading = 0
+          request: (request) ->
+            # Do something when sending the request
+            $rootScope.loading++
+            request
+          response: (response) ->
+            # Do something when recieving the response
+            $rootScope.loading--
+            response
+      ]
+      
+    </hljs>
     <div class="tip"><p>You can visualize variables in scopes by enabling the <a href="https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk">AngularJS
 batarang</a>
 extension for Chrome.</p>
 
     </div><p>In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
 Let&#39;s handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).</p>
-<pre><code>app.factory &#39;loadingInterceptor&#39;, [
-&#39;$rootScope&#39;
-($rootScope) -&gt;
-  [...]
-  responseError: (rejection) -&gt;
-    # Do something when recieving an error
-    $rootScope.loading--
-    rejection
-]
-</code></pre><h4 id="handling-errors">Handling errors</h4>
+
+    <hljs language="coffeescript">
+      app.factory 'loadingInterceptor', [
+      '$rootScope'
+      ($rootScope) ->
+        [...]
+        responseError: (rejection) ->
+          # Do something when recieving an error
+          $rootScope.loading--
+          rejection
+      ]
+      
+    </hljs><h4 id="handling-errors">Handling errors</h4>
 <p>As we&#39;re talking about errors, sometimes, the API is sending some errors that should be displayed to the user:
 identification failures, inexistant object, wrong route...</p>
-<p>E.g, we should return a &#39;bad request&#39; error when trying to mark as done a task that is already done:</p>
-<pre><code>api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
-  toDoItem = _.find toDoList, id: parseInt(req.params.id)
-  return res.send 400, &#39;This task is already done&#39; if toDoItem.done
-  [...]
-</code></pre><p>And a 404 &#39;not found&#39; when the id doesn&#39;t match with any task:</p>
-<pre><code>api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
-  toDoItem = _.find toDoList, id: parseInt(req.params.id)
-  return res.send 404, &#39;No task with the id &#39;+req.params.id if !toDoItem
-  [...]
-</code></pre><p>Now, we just need an interceptor to pass the error to the scope and then display it:</p>
+<p>E.g., we should return a &#39;bad request&#39; error when trying to mark as done a task that is already done:</p>
+
+    <hljs language="coffeescript">
+      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+        toDoItem = _.find toDoList, id: parseInt(req.params.id)
+        return res.send 400, 'This task is already done' if toDoItem.done
+        [...]
+        
+    </hljs><p>And a 404 &#39;not found&#39; when the id doesn&#39;t match with any task:</p>
+
+    <hljs language="coffeescript">
+      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+        toDoItem = _.find toDoList, id: parseInt(req.params.id)
+        return res.send 404, 'No task with the id '+req.params.id if !toDoItem
+        [...]
+        
+    </hljs><p>Now, we just need an interceptor to pass the error to the scope and then display it:</p>
 
     <tabset>
       <tab heading="app.coffee">
-        <pre>app.factory 'errorsInterceptor', [
-  '$rootScope', '$timeout'
-  ($rootScope, $timeout) ->
-    $rootScope.errors = []
-    responseError: (rejection) ->
-      error =
-        status: rejection.status
-        message: rejection.data
-      $rootScope.errors.push error
-      $timeout ->
-        $rootScope.errors.shift()
-      , 5000
-      rejection
-]
-
-app.config [
-  '$routeProvider', '$locationProvider', '$httpProvider'
-  ($routeProvider, $locationProvider, $httpProvider) ->
-    [...]
-    # Register intercetors
-    $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
-]
-</pre>
+        <hljs language="coffeescript">
+          app.factory 'errorsInterceptor', [
+            '$rootScope', '$timeout'
+            ($rootScope, $timeout) ->
+              $rootScope.errors = []
+              responseError: (rejection) ->
+                error =
+                  status: rejection.status
+                  message: rejection.data
+                $rootScope.errors.push error
+                $timeout ->
+                  $rootScope.errors.shift()
+                , 5000
+                rejection
+          ]
+          
+          app.config [
+            '$routeProvider', '$locationProvider', '$httpProvider'
+            ($routeProvider, $locationProvider, $httpProvider) ->
+              [...]
+              # Register intercetors
+              $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
+          ]
+          
+        </hljs>
       </tab>
       <tab heading="index.jade">
         <pre>body
@@ -552,7 +597,139 @@ app.config [
   position: fixed;
   bottom: @padding-large-vertical;
   margin: auto;
-}</pre>
+}
+</pre>
+      </tab>
+    </tabset><h4 id="authentication-manager">Authentication manager</h4>
+<p>APIs sometimes need to autenticate to access some data. If not, a 401 &#39;unauthorized&#39; response is thrown.</p>
+<p>This is a really simple authentification management in our <code>api.coffee</code> server:</p>
+
+    <hljs language="coffeescript">
+      # Configuration
+      [...]
+      api.use express.cookieParser()
+      api.use express.cookieSession
+        secret: 'thisIsNotSoSecret'
+        
+      # Authentification management
+      api.get '/login', (req, res, next) ->
+        req.session = 'logged in'
+        res.send 'You are authenticated'
+        
+      api.get '/logout', (req, res, next) ->
+        req.session = null
+        res.send 'You successfully logged out'
+        
+      ensureAuthenticated = (req, res, next) ->
+        return res.send 401, 'You need to log in first' if req.session != 'logged in'
+        next()
+        
+      # API routes
+      api.get '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+        
+      api.post '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+        
+      api.del '/todo/:id', ensureAuthenticated, waitOneSecond, (req, res, next) ->
+        [...]
+        
+    </hljs><p>And a simple module using <code>$http</code> to provide log in and log out buttons:</p>
+
+    <tabset>
+      <tab heading="authentication/authentication.coffee">
+        <hljs language="coffeescript">
+          auth = angular.module 'kewl.authentication', ['ng', 'ngRoute', 'ui.bootstrap']
+          
+          auth.config [
+            '$routeProvider'
+            ($routeProvider) ->
+            
+              $routeProvider
+                .when '/authentication', templateUrl: 'authentication/authentication.html', controller: 'authenticationController'
+                
+          ]
+          
+          auth.controller 'authenticationController', [
+            '$scope', '$http', '$timeout'
+            ($scope, $http, $timeout) ->
+              $scope.messages = []
+              displayMessage = (message) ->
+                $scope.messages.push message
+                $timeout ->
+                  $scope.messages.shift()
+                , 2500
+                
+              $scope.login = ->
+                $http
+                  method: 'GET'
+                  url: 'login'
+                .success displayMessage
+                
+              $scope.logout = ->
+                $http
+                  method: 'GET'
+                  url: 'logout'
+                .success displayMessage
+          ]
+          
+        </hljs>
+      </tab>
+      <tab heading="authentication/authentication.jade">
+        <pre>h1 Authentication
+
+.row
+  button.login(ng-click='login()')
+    i.icon.icon-sign-in
+    |  Log in
+    
+  button.logout(ng-click='logout()')
+    i.icon.icon-sign-out
+    |  Log out
+    
+.messages
+  .message(ng-repeat='message in messages')
+    {{message}}
+    </pre>
+      </tab>
+      <tab heading="authentication/authentication.less">
+        <pre>.login, .logout {
+  .btn;
+  .btn-lg;
+  .make-xs-column(3);
+}
+
+.login {
+  .btn-success;
+  .make-xs-column-offset(1);
+}
+
+.logout {
+  .btn-danger;
+  .make-xs-column-offset(4);
+}
+
+.messages {
+  .row;
+  margin-top: @padding-base-vertical;
+  .message {
+    .alert;
+    .alert-info;
+  }
+}
+</pre>
+      </tab>
+      <tab heading="app.coffee">
+        <hljs language="coffeescript">
+          app = angular.module 'kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo', 'kewl.authentication']
+          [...]
+          
+        </hljs>
+      </tab>
+      <tab heading="app.less">
+        <pre>[...]
+@import "authentication/authentication";
+</pre>
       </tab>
     </tabset>
   </li>

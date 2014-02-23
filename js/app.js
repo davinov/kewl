@@ -1,18 +1,20 @@
 'use strict';
 var app;
 
-app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'kewl.todo']);
+app = angular.module('kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo', 'kewl.authentication']);
 
 app.config([
-  '$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+  '$routeProvider', '$locationProvider', '$httpProvider', 'hljsServiceProvider', function($routeProvider, $locationProvider, $httpProvider, hljsServiceProvider) {
     $routeProvider.when('/', {
       templateUrl: 'home.html'
     }).otherwise({
       redirectTo: '/'
     });
-    $locationProvider.html5Mode(false);
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    return $httpProvider.interceptors.push('loadingInterceptor', 'errorsInterceptor');
+    $httpProvider.interceptors.push('loadingInterceptor', 'errorsInterceptor');
+    return hljsServiceProvider.setOptions({
+      tabReplace: '  '
+    });
   }
 ]);
 
@@ -52,6 +54,44 @@ app.factory('errorsInterceptor', [
         }, 5000);
         return rejection;
       }
+    };
+  }
+]);
+;'use strict';
+var auth;
+
+auth = angular.module('kewl.authentication', ['ng', 'ngRoute', 'ui.bootstrap']);
+
+auth.config([
+  '$routeProvider', function($routeProvider) {
+    return $routeProvider.when('/authentication', {
+      templateUrl: 'authentication/authentication.html',
+      controller: 'authenticationController'
+    });
+  }
+]);
+
+auth.controller('authenticationController', [
+  '$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+    var displayMessage;
+    $scope.messages = [];
+    displayMessage = function(message) {
+      $scope.messages.push(message);
+      return $timeout(function() {
+        return $scope.messages.shift();
+      }, 2500);
+    };
+    $scope.login = function() {
+      return $http({
+        method: 'GET',
+        url: 'login'
+      }).success(displayMessage);
+    };
+    return $scope.logout = function() {
+      return $http({
+        method: 'GET',
+        url: 'logout'
+      }).success(displayMessage);
     };
   }
 ]);
