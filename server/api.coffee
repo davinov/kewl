@@ -51,6 +51,8 @@ api.post '/todo', waitOneSecond, (req, res, next) ->
 
 api.del '/todo/:id', waitOneSecond, (req, res, next) ->
   toDoItem = _.find toDoList, id: parseInt(req.params.id)
+  return res.send 404, 'No task with the id ' + req.params.id if !toDoItem
+  return res.send 400, 'This task is already done' if toDoItem.done
   toDoItem.done = true
   res.send toDoItem
 

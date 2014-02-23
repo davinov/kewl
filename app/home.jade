@@ -546,3 +546,25 @@ ol
             $rootScope.loading--
             rejection
         ]
+
+    :markdown
+      #### Handling errors
+      As we're talking about errors, sometimes, the API is sending some errors that should be displayed to the user:
+      identification failures, inexistant object, wrong route...
+
+      E.g, we should return a 'bad request' error when trying to mark as done a task that is already done:
+
+          api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+            toDoItem = _.find toDoList, id: parseInt(req.params.id)
+            return res.send 400, 'This task is already done' if toDoItem.done
+            [...]
+
+      And a 404 'not found' when the id doesn't match with any task:
+
+          api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+            toDoItem = _.find toDoList, id: parseInt(req.params.id)
+          return res.send 404, 'No task with the id '+req.params.id if !toDoItem
+          [...]
+
+      
+
