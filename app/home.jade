@@ -338,4 +338,12 @@ ol
             }
           }
 
+    :markdown
+      At this point, our to-do list is fully functionnal, except for a little flickering when the object `toDoList` is
+      queried. To avoid that effect, only affect `$scope.toDoList` when the server has answered:
+
+          $scope.refreshToDoList = ->
+            ToDoList.query (response) -> # function that will be called on success
+              $scope.toDoList = response
+
 

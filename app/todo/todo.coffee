@@ -15,7 +15,8 @@ todo.controller 'toDoController', [
   '$scope', 'ToDoList'
   ($scope, ToDoList) ->
     $scope.refreshToDoList = ->
-      $scope.toDoList = ToDoList.query()
+      ToDoList.query (response) ->
+        $scope.toDoList = response
 
     $scope.sendButtonDisabled = false
     $scope.newToDo =
