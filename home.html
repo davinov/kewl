@@ -11,7 +11,7 @@
   
 </p>
 <ol>
-  <li>
+  <li id="step-01">
     <h2>Starting a new brunch project<small> The beginning of all good story</small></h2><p>To start a client-only app easily, I suggest using tools like <a href="http://brunch.io">Brunch</a>,
 <a href="http://yeoman.io/">Yeoman</a> or <a href="http://lauterry.github.io/ngTailor/">ngTailor</a>.</p>
 <p>Let&#39;s use Brunch and generate a project based on the <a href="http://vbrajon.fr">@vbrajon</a>&#39;s
@@ -27,7 +27,7 @@ See the README file for more info.</p>
 
     </div>
   </li>
-  <li>
+  <li id="step-02">
     <h2>Creating our backend with Express<small> Love at the first sight</small></h2><p>Let&#39;s create some backend for our brand new Angular app.
 Having a REST API as a backend is a great choice, as it&#39;s allow other developers to create easily new fontends to
 use the data it exposes (native mobile apps, desktop apps,...) and interacts with others services.
@@ -219,7 +219,7 @@ accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}'
   '$scope', 'ToDoList'
   ($scope, ToDoList) ->
     $scope.refreshToDoList = ->
-      ToDoList.query()
+      $scope.toDoList = ToDoList.query()
       
     $scope.sendButtonDisabled = false
     $scope.newToDo =
@@ -298,9 +298,184 @@ accordion
   }
   }
 }
-
 </pre>
       </tab>
-    </tabset>
+    </tabset><p>At this point, our to-do list is fully functionnal, except for a little flickering when the object <code>toDoList</code> is
+queried. To avoid that effect, only affect <code>$scope.toDoList</code> when the server has answered:</p>
+<pre><code>$scope.refreshToDoList = -&gt;
+  ToDoList.query (response) -&gt; # function that will be called on success
+    $scope.toDoList = response
+</code></pre>
+  </li>
+  <li id="step-03">
+    <h2>Interceptors saving the user from silence<small> Angular/API communication therapy</small></h2><p>As user, when interacting with the server or changing route, we&#39;ll like to be informed that something is happening
+behind the scene. The usual UX pattern when requesting something through the web is to have a loading indicator,
+from the browser: <img src="img/loading-indicator-chromium.png" alt="Loading indicator from Chromium"></p>
+<p>When loading asynchronous data without refeshing the webpage (AJAX calls) like Angular does, these indicators are
+not triggered.</p>
+<p>Fortunatly, Angular provides <a href="http://docs.angularjs.org/api/ng/service/$http#interceptors">interceptors</a> to catch
+requests before and after they&#39;re sent.</p>
+<h4 id="implementing-a-loading-indicator">Implementing a loading indicator</h4>
+<p>Interceptors are stored in the <code>$httpProvider.interceptor</code>. They are registered using <code>$httpProvider</code> like this:</p>
+<pre><code>$provide.factory &#39;myHttpInterceptor&#39;, -&gt;
+  request: (request) -&gt;
+    # Do something when sending the request
+    request
+
+  response: (response) -&gt;
+    # Do something when recieving the response
+    response
+
+$httpProvider.interceptors.push &#39;myHttpInterceptor&#39;
+</code></pre><p>To implement a loading indicator, we can add to our <code>app.coffee</code>:</p>
+<pre><code>app.factory &#39;loadingInterceptor&#39;, [
+  &#39;$rootScope&#39;
+  ($rootScope) -&gt;
+    request: (request) -&gt;
+      # Do something when sending the request
+      $rootScope.loading = true
+      request
+    response: (response) -&gt;
+      # Do something when recieving the response
+      $rootScope.loading = false
+      response
+]
+
+app.config [
+  &#39;$routeProvider&#39;, &#39;$locationProvider&#39;, &#39;$httpProvider&#39;
+  ($routeProvider, $locationProvider, $httpProvider) -&gt;
+    [...]
+    # Register loading intercetor
+    $httpProvider.interceptors.push &#39;loadingInterceptor&#39;
+]
+</code></pre><p>The <code>$rootScope.loading</code> variable can now be used to display an indicator, like the corner indicator from
+<a href="http://tympanus.net/Development/CreativeLoadingEffects/">creative loading effects</a>:</p>
+
+    <tabset>
+      <tab heading="index.jade">
+        <pre>body
+  [...]
+  .loading-indicator(ng-show='$root.loading')
+  [...]
+  </pre>
+      </tab>
+      <tab heading="app.less">
+        <pre>.loading-indicator {
+  @loading-indicator-size: 300px;
+  
+  position: fixed;
+  top: 0;
+  right: 0;
+  
+  width: @loading-indicator-size;
+  height: @loading-indicator-size;
+  background: @navbar-default-bg;
+  background: rgba(red(@navbar-default-bg), green(@navbar-default-bg), blue(@navbar-default-bg), 0.7);
+  .transition(all 0.3s);
+  -webkit-transform: translateX(50%) translateY(-50%) rotate(45deg);
+  transform: translateX(50%) translateY(-50%) rotate(45deg);
+  pointer-events: none;
+  
+  @circles-color-1: #fff;
+  @circles-color-2: @brand-primary;
+  &::before,
+  &::after {
+    position: absolute;
+    bottom: @loading-indicator-size/10;
+    left: @loading-indicator-size/2;
+    display: block;
+    border: 5px solid @circles-color-1;
+    border-radius: 50%;
+    content: '';
+  }
+  
+  @big-circle-size: @loading-indicator-size*8/30;
+  &::before {
+    margin-left: -@big-circle-size/2;
+    width: @big-circle-size;
+    height: @big-circle-size;
+    border-right-color: @circles-color-2;
+    border-left-color: @circles-color-2;
+    -webkit-animation: rotation 3s linear infinite;
+    animation: rotation 3s linear infinite;
+  }
+  
+  &::after {
+    @small-circle-size: @big-circle-size/2;
+    bottom: 50px;
+    margin-left: -@small-circle-size/2;
+    width: @small-circle-size;
+    height: @small-circle-size;
+    border-top-color: @circles-color-2;
+    border-bottom-color: @circles-color-2;
+    -webkit-animation: rotation 1s linear infinite;
+    animation: rotation 1s linear infinite;
+  }
+  
+  @-webkit-keyframes rotation {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    50% {
+      -webkit-transform: rotate(180deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+</pre>
+      </tab>
+    </tabset><p>As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
+before our Express server to simulate some network latency:</p>
+<pre><code># Simulate network latency
+waitOneSecond = (req, res, next) -&gt;
+  setTimeout next, 1000
+
+# API routes
+api.get &#39;/todo&#39;, waitOneSecond, (req, res, next) -&gt;
+  res.send toDoList
+
+api.post &#39;/todo&#39;, waitOneSecond, (req, res, next) -&gt;
+  [...]
+  res.send newToDo
+
+api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
+  toDoItem = _.find toDoList, id: parseInt(req.params.id)
+  [...]
+  res.send toDoItem
+</code></pre><p>You&#39;ll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
+issue by counting the number of request waiting:</p>
+<pre><code>app.factory &#39;loadingInterceptor&#39;, [
+  &#39;$rootScope&#39;
+  ($rootScope) -&gt;
+    $rootScope.loading = 0
+    request: (request) -&gt;
+      # Do something when sending the request
+      $rootScope.loading++
+      request
+    response: (response) -&gt;
+      # Do something when recieving the response
+      $rootScope.loading--
+      response
+]
+</code></pre>
+    <div class="tip"><p>You can visualize variables in scopes by enabling the <a href="https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk">AngularJS
+batarang</a>
+extension for Chrome.</p>
+
+    </div>
   </li>
 </ol>

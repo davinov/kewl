@@ -11,7 +11,24 @@ app.config([
       redirectTo: '/'
     });
     $locationProvider.html5Mode(false);
-    return delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    return $httpProvider.interceptors.push('loadingInterceptor');
+  }
+]);
+
+app.factory('loadingInterceptor', [
+  '$rootScope', function($rootScope) {
+    $rootScope.loading = 0;
+    return {
+      request: function(request) {
+        $rootScope.loading++;
+        return request;
+      },
+      response: function(response) {
+        $rootScope.loading--;
+        return response;
+      }
+    };
   }
 ]);
 ;app.filter('capitalize', function() {
@@ -38,7 +55,9 @@ todo.config([
 todo.controller('toDoController', [
   '$scope', 'ToDoList', function($scope, ToDoList) {
     $scope.refreshToDoList = function() {
-      return ToDoList.query();
+      return ToDoList.query(function(response) {
+        return $scope.toDoList = response;
+      });
     };
     $scope.sendButtonDisabled = false;
     $scope.newToDo = {
