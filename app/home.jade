@@ -532,3 +532,17 @@ ol
         You can visualize variables in scopes by enabling the [AngularJS
         batarang](https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk)
         extension for Chrome.
+
+    :markdown
+      In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
+      Let's handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).
+
+        app.factory 'loadingInterceptor', [
+        '$rootScope'
+        ($rootScope) ->
+          [...]
+          responseError: (rejection) ->
+            # Do something when recieving an error
+            $rootScope.loading--
+            rejection
+        ]

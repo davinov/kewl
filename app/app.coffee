@@ -32,5 +32,8 @@ app.factory 'loadingInterceptor', [
       # Do something when recieving the response
       $rootScope.loading--
       response
+    responseError: (rejection) ->
+      # Do something when recieving an error
+      $rootScope.loading--
+      rejection
 ]
-
