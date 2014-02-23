@@ -537,15 +537,15 @@ ol
       In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
       Let's handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).
 
-        app.factory 'loadingInterceptor', [
-        '$rootScope'
-        ($rootScope) ->
-          [...]
-          responseError: (rejection) ->
-            # Do something when recieving an error
-            $rootScope.loading--
-            rejection
-        ]
+          app.factory 'loadingInterceptor', [
+          '$rootScope'
+          ($rootScope) ->
+            [...]
+            responseError: (rejection) ->
+              # Do something when recieving an error
+              $rootScope.loading--
+              rejection
+          ]
 
     :markdown
       #### Handling errors
@@ -563,8 +563,60 @@ ol
 
           api.del '/todo/:id', waitOneSecond, (req, res, next) ->
             toDoItem = _.find toDoList, id: parseInt(req.params.id)
-          return res.send 404, 'No task with the id '+req.params.id if !toDoItem
-          [...]
+            return res.send 404, 'No task with the id '+req.params.id if !toDoItem
+            [...]
 
-      
+      Now, we just need an interceptor to pass the error to the scope and then display it:
 
+    tabset
+      tab(heading='app.coffee')
+        pre.
+          app.factory 'errorsInterceptor', [
+            '$rootScope', '$timeout'
+            ($rootScope, $timeout) ->
+              $rootScope.errors = []
+              responseError: (rejection) ->
+                error =
+                  status: rejection.status
+                  message: rejection.data
+                $rootScope.errors.push error
+                $timeout ->
+                  $rootScope.errors.shift()
+                , 5000
+                rejection
+          ]
+
+          app.config [
+            '$routeProvider', '$locationProvider', '$httpProvider'
+            ($routeProvider, $locationProvider, $httpProvider) ->
+              [...]
+              # Register intercetors
+              $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
+          ]
+
+      tab(heading='index.jade')
+        pre.
+          body
+            [...]
+            .error(ng-repeat='error in $root.errors')
+              strong {{ error.message }}
+              small.pull-right Error {{ error.status }}
+            [...]
+
+      tab(heading='app.less')
+        pre.
+          .error {
+            .alert;
+            .alert-danger;
+            width: 100%;
+            .make-sm-column(8);
+            .make-sm-column-offset(2);
+            .make-md-column(6);
+            .make-md-column-offset(3);
+            .make-lg-column(4);
+            .make-lg-column-offset(4);
+            z-index: 900;
+            position: fixed;
+            bottom: @padding-large-vertical;
+            margin: auto;
+          }

@@ -101,4 +101,20 @@ img {
   }
 }
 
+.error {
+  .alert;
+  .alert-danger;
+  width: 100%;
+  .make-sm-column(8);
+  .make-sm-column-offset(2);
+  .make-md-column(6);
+  .make-md-column-offset(3);
+  .make-lg-column(4);
+  .make-lg-column-offset(4);
+  z-index: 900;
+  position: fixed;
+  bottom: @padding-large-vertical;
+  margin: auto;
+}
+
 @import "todo/todo";

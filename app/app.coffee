@@ -16,8 +16,8 @@ app.config [
     # Allow cross-domain http requests
     delete $httpProvider.defaults.headers.common['X-Requested-With']
 
-    # Register loading intercetor
-    $httpProvider.interceptors.push 'loadingInterceptor'
+    # Register intercetors
+    $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
 ]
 
 app.factory 'loadingInterceptor', [
@@ -35,5 +35,20 @@ app.factory 'loadingInterceptor', [
     responseError: (rejection) ->
       # Do something when recieving an error
       $rootScope.loading--
+      rejection
+]
+
+app.factory 'errorsInterceptor', [
+  '$rootScope', '$timeout'
+  ($rootScope, $timeout) ->
+    $rootScope.errors = []
+    responseError: (rejection) ->
+      error =
+        status: rejection.status
+        message: rejection.data
+      $rootScope.errors.push error
+      $timeout ->
+        $rootScope.errors.shift()
+      , 5000
       rejection
 ]

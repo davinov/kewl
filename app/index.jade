@@ -24,6 +24,9 @@ html(lang='en', data-ng-app='kewl')
               |  Source code on GitHub
 
     .loading-indicator(ng-show='$root.loading')
+    .error(ng-repeat='error in $root.errors', ng-cloak)
+      strong {{ error.message }}
+      small.pull-right Error {{ error.status }}
 
     main.container(data-ng-view)
 
