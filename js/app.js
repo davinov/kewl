@@ -37,7 +37,33 @@ todo.config([
 
 todo.controller('toDoController', [
   '$scope', 'ToDoList', function($scope, ToDoList) {
-    return $scope.toDoList = ToDoList.query();
+    $scope.refreshToDoList = function() {
+      return ToDoList.query();
+    };
+    $scope.sendButtonDisabled = false;
+    $scope.newToDo = {
+      title: "",
+      details: ""
+    };
+    $scope.addNewToDo = function() {
+      $scope.sendButtonDisabled = true;
+      return ToDoList.save($scope.newToDo, function() {
+        $scope.newToDo = {
+          title: "",
+          details: ""
+        };
+        $scope.sendButtonDisabled = false;
+        return $scope.refreshToDoList();
+      });
+    };
+    $scope.markAsDone = function(toDoItem) {
+      return ToDoList["delete"]({
+        id: toDoItem.id
+      }, function() {
+        return $scope.refreshToDoList();
+      });
+    };
+    return $scope.refreshToDoList();
   }
 ]);
 

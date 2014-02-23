@@ -1,7 +1,18 @@
 
 <h1>To do list</h1>
 <accordion>
-  <accordion-group ng-repeat="toDo in toDoList" heading="{{toDo.title}}" ng-class="{done: toDo.done}" class="to-do">
-    <accordion-heading>{{toDo.title}}</accordion-heading>{{toDo.details}}
+  <accordion-group ng-repeat="toDo in toDoList" ng-class="{done: toDo.done}" class="to-do">
+    <accordion-heading>{{toDo.title}}
+      <button ng-click="markAsDone(toDo)" class="mark-as-done"><i class="icon icon-check"></i></button>
+    </accordion-heading>{{toDo.details}}
+  </accordion-group>
+  <accordion-group class="to-do new">
+    <accordion-heading>
+      <div class="row">
+        <input type="text" placeholder="Add a new task..." ng-model="newToDo.title" class="title">
+        <button ng-click="addNewToDo()" ng-disabled="sendButtonDisabled" class="send"><i class="icon icon-plus"></i> Send</button>
+      </div>
+    </accordion-heading>
+    <textarea placeholder="More details?" ng-model="newToDo.details"></textarea>
   </accordion-group>
 </accordion>

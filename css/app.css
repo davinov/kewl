@@ -7447,12 +7447,416 @@ label {
 .note a {
   color: #555555;
 }
+.to-do .mark-as-done {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-width: 0 1px 4px 1px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #28b62c;
+  border-color: #23a127;
+  float: right !important;
+  float: right;
+  padding: 0.5px 5px;
+}
+.to-do .mark-as-done:focus,
+.to-do .mark-as-done:active:focus,
+.to-do .mark-as-done.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.to-do .mark-as-done:hover,
+.to-do .mark-as-done:focus {
+  color: #555555;
+  text-decoration: none;
+}
+.to-do .mark-as-done:active,
+.to-do .mark-as-done.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.to-do .mark-as-done.disabled,
+.to-do .mark-as-done[disabled],
+fieldset[disabled] .to-do .mark-as-done {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do .mark-as-done:hover {
+  margin-top: 1px;
+  border-bottom-width: 3px;
+}
+.to-do .mark-as-done:active {
+  margin-top: 2px;
+  border-bottom-width: 2px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do .mark-as-done-default:hover,
+.to-do .mark-as-done-default:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-default {
+  background-color: #eeeeee;
+  border-color: #e2e2e2;
+}
+.to-do .mark-as-done-primary:hover,
+.to-do .mark-as-done-primary:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-primary {
+  background-color: #158cba;
+  border-color: #127ba3;
+}
+.to-do .mark-as-done-success:hover,
+.to-do .mark-as-done-success:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-success {
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.to-do .mark-as-done-info:hover,
+.to-do .mark-as-done-info:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-info {
+  background-color: #75caeb;
+  border-color: #5fc1e8;
+}
+.to-do .mark-as-done-warning:hover,
+.to-do .mark-as-done-warning:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-warning {
+  background-color: #ff851b;
+  border-color: #ff7701;
+}
+.to-do .mark-as-done-danger:hover,
+.to-do .mark-as-done-danger:focus,
+.to-do .mark-as-done-group.open .dropdown-toggle.btn-danger {
+  background-color: #ff4136;
+  border-color: #ff291c;
+}
+.to-do .mark-as-done-group.open .dropdown-toggle {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do .mark-as-done:hover,
+.to-do .mark-as-done:focus,
+.to-do .mark-as-done:active,
+.to-do .mark-as-done.active,
+.open .dropdown-toggle.to-do .mark-as-done {
+  color: #ffffff;
+  background-color: #219524;
+  border-color: #186f1b;
+}
+.to-do .mark-as-done:active,
+.to-do .mark-as-done.active,
+.open .dropdown-toggle.to-do .mark-as-done {
+  background-image: none;
+}
+.to-do .mark-as-done.disabled,
+.to-do .mark-as-done[disabled],
+fieldset[disabled] .to-do .mark-as-done,
+.to-do .mark-as-done.disabled:hover,
+.to-do .mark-as-done[disabled]:hover,
+fieldset[disabled] .to-do .mark-as-done:hover,
+.to-do .mark-as-done.disabled:focus,
+.to-do .mark-as-done[disabled]:focus,
+fieldset[disabled] .to-do .mark-as-done:focus,
+.to-do .mark-as-done.disabled:active,
+.to-do .mark-as-done[disabled]:active,
+fieldset[disabled] .to-do .mark-as-done:active,
+.to-do .mark-as-done.disabled.active,
+.to-do .mark-as-done[disabled].active,
+fieldset[disabled] .to-do .mark-as-done.active {
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.to-do .mark-as-done .badge {
+  color: #28b62c;
+  background-color: #ffffff;
+}
 .to-do.done {
   color: #999999;
 }
 .to-do.done .panel-heading {
   color: #999999;
   text-decoration: line-through;
+}
+.to-do.new .title {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #e7e7e7;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
+  float: left;
+  width: 66.66666666666666%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.to-do.new .title:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+.to-do.new .title::-moz-placeholder {
+  color: #999999;
+  opacity: 1;
+}
+.to-do.new .title:-ms-input-placeholder {
+  color: #999999;
+}
+.to-do.new .title::-webkit-input-placeholder {
+  color: #999999;
+}
+.to-do.new .title[disabled],
+.to-do.new .title[readonly],
+fieldset[disabled] .to-do.new .title {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+  opacity: 1;
+}
+textarea.to-do.new .title {
+  height: auto;
+}
+@media (min-width: 768px) {
+  .to-do.new .title {
+    float: left;
+    width: 83.33333333333334%;
+  }
+}
+.to-do.new .send {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-width: 0 1px 4px 1px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: #158cba;
+  border-color: #127ba3;
+  float: left;
+  width: 33.33333333333333%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.to-do.new .send:focus,
+.to-do.new .send:active:focus,
+.to-do.new .send.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.to-do.new .send:hover,
+.to-do.new .send:focus {
+  color: #555555;
+  text-decoration: none;
+}
+.to-do.new .send:active,
+.to-do.new .send.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.to-do.new .send.disabled,
+.to-do.new .send[disabled],
+fieldset[disabled] .to-do.new .send {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do.new .send:hover {
+  margin-top: 1px;
+  border-bottom-width: 3px;
+}
+.to-do.new .send:active {
+  margin-top: 2px;
+  border-bottom-width: 2px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do.new .send-default:hover,
+.to-do.new .send-default:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-default {
+  background-color: #eeeeee;
+  border-color: #e2e2e2;
+}
+.to-do.new .send-primary:hover,
+.to-do.new .send-primary:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-primary {
+  background-color: #158cba;
+  border-color: #127ba3;
+}
+.to-do.new .send-success:hover,
+.to-do.new .send-success:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-success {
+  background-color: #28b62c;
+  border-color: #23a127;
+}
+.to-do.new .send-info:hover,
+.to-do.new .send-info:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-info {
+  background-color: #75caeb;
+  border-color: #5fc1e8;
+}
+.to-do.new .send-warning:hover,
+.to-do.new .send-warning:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-warning {
+  background-color: #ff851b;
+  border-color: #ff7701;
+}
+.to-do.new .send-danger:hover,
+.to-do.new .send-danger:focus,
+.to-do.new .send-group.open .dropdown-toggle.btn-danger {
+  background-color: #ff4136;
+  border-color: #ff291c;
+}
+.to-do.new .send-group.open .dropdown-toggle {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.to-do.new .send:hover,
+.to-do.new .send:focus,
+.to-do.new .send:active,
+.to-do.new .send.active,
+.open .dropdown-toggle.to-do.new .send {
+  color: #ffffff;
+  background-color: #117095;
+  border-color: #0c516c;
+}
+.to-do.new .send:active,
+.to-do.new .send.active,
+.open .dropdown-toggle.to-do.new .send {
+  background-image: none;
+}
+.to-do.new .send.disabled,
+.to-do.new .send[disabled],
+fieldset[disabled] .to-do.new .send,
+.to-do.new .send.disabled:hover,
+.to-do.new .send[disabled]:hover,
+fieldset[disabled] .to-do.new .send:hover,
+.to-do.new .send.disabled:focus,
+.to-do.new .send[disabled]:focus,
+fieldset[disabled] .to-do.new .send:focus,
+.to-do.new .send.disabled:active,
+.to-do.new .send[disabled]:active,
+fieldset[disabled] .to-do.new .send:active,
+.to-do.new .send.disabled.active,
+.to-do.new .send[disabled].active,
+fieldset[disabled] .to-do.new .send.active {
+  background-color: #158cba;
+  border-color: #127ba3;
+}
+.to-do.new .send .badge {
+  color: #158cba;
+  background-color: #ffffff;
+}
+@media (min-width: 768px) {
+  .to-do.new .send {
+    float: left;
+    width: 8.333333333333332%;
+  }
+}
+@media (min-width: 768px) {
+  .to-do.new .send {
+    margin-left: 8.333333333333332%;
+  }
+}
+.to-do.new textarea {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #e7e7e7;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
+}
+.to-do.new textarea:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+.to-do.new textarea::-moz-placeholder {
+  color: #999999;
+  opacity: 1;
+}
+.to-do.new textarea:-ms-input-placeholder {
+  color: #999999;
+}
+.to-do.new textarea::-webkit-input-placeholder {
+  color: #999999;
+}
+.to-do.new textarea[disabled],
+.to-do.new textarea[readonly],
+fieldset[disabled] .to-do.new textarea {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+  opacity: 1;
+}
+textarea.to-do.new textarea {
+  height: auto;
 }
 
 
