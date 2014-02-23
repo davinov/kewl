@@ -32,12 +32,16 @@ toDoList = [
   done: true
 ]
 
+# Simulate network latency
+waitOneSecond = (req, res, next) ->
+  setTimeout next, 1000
+
 # API routes
 
-api.get '/todo', (req, res, next) ->
+api.get '/todo', waitOneSecond, (req, res, next) ->
   res.send toDoList
 
-api.post '/todo', (req, res, next) ->
+api.post '/todo', waitOneSecond, (req, res, next) ->
   newToDo = req.body
   newToDo.done = false
   id = id+1
@@ -45,11 +49,10 @@ api.post '/todo', (req, res, next) ->
   toDoList.push newToDo
   res.send newToDo
 
-api.del '/todo/:id', (req, res, next) ->
+api.del '/todo/:id', waitOneSecond, (req, res, next) ->
   toDoItem = _.find toDoList, id: parseInt(req.params.id)
   toDoItem.done = true
   res.send toDoItem
-
 
 api.start = (port = 3333, path, callback) ->
   api.listen port, callback

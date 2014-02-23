@@ -11,7 +11,7 @@ p.lead.
 
 ol
 
-  li
+  li#step-01
     h2 Starting a new brunch project
       small  The beginning of all good story
 
@@ -35,7 +35,7 @@ ol
         See the README file for more info.
 
 
-  li
+  li#step-02
     h2 Creating our backend with Express
       small  Love at the first sight
 
@@ -345,5 +345,168 @@ ol
           $scope.refreshToDoList = ->
             ToDoList.query (response) -> # function that will be called on success
               $scope.toDoList = response
+
+  li#step-03
+    h2 Interceptors saving the user from silence
+      small  Angular/API communication therapy
+
+    :markdown
+      As user, when interacting with the server or changing route, we'll like to be informed that something is happening
+      behind the scene. The usual UX pattern when requesting something through the web is to have a loading indicator,
+      from the browser: ![Loading indicator from Chromium](img/loading-indicator-chromium.png)
+
+      When loading asynchronous data without refeshing the webpage (AJAX calls) like Angular does, these indicators are
+      not triggered.
+
+      Fortunatly, Angular provides [interceptors](http://docs.angularjs.org/api/ng/service/$http#interceptors) to catch
+      requests before and after they're sent.
+
+      #### Implementing a loading indicator
+      Interceptors are stored in the `$httpProvider.interceptor`. They are registered using `$httpProvider` like this:
+
+          $provide.factory 'myHttpInterceptor', ->
+            request: (request) ->
+              # Do something when sending the request
+              request
+
+            response: (response) ->
+              # Do something when recieving the response
+              response
+
+          $httpProvider.interceptors.push 'myHttpInterceptor'
+
+      To implement a loading indicator, we can add to our `app.coffee`:
+
+          app.factory 'loadingInterceptor', [
+            '$rootScope'
+            ($rootScope) ->
+              request: (request) ->
+                # Do something when sending the request
+                $rootScope.loading = true
+                request
+              response: (response) ->
+                # Do something when recieving the response
+                $rootScope.loading = false
+                response
+          ]
+
+          app.config [
+            '$routeProvider', '$locationProvider', '$httpProvider'
+            ($routeProvider, $locationProvider, $httpProvider) ->
+              [...]
+              # Register loading intercetor
+              $httpProvider.interceptors.push 'loadingInterceptor'
+          ]
+
+      The `$rootScope.loading` variable can now be used to display an indicator, like the corner indicator from
+      [creative loading effects](http://tympanus.net/Development/CreativeLoadingEffects/):
+
+    tabset
+      tab(heading='index.jade')
+        pre.
+          body
+            [...]
+            .loading-indicator(ng-show='$root.loading')
+            [...]
+
+      tab(heading='app.less')
+        pre.
+          .loading-indicator {
+            @loading-indicator-size: 300px;
+
+            position: fixed;
+            top: 0;
+            right: 0;
+
+            width: @loading-indicator-size;
+            height: @loading-indicator-size;
+            background: @navbar-default-bg;
+            background: rgba(red(@navbar-default-bg), green(@navbar-default-bg), blue(@navbar-default-bg), 0.7);
+            .transition(all 0.3s);
+            -webkit-transform: translateX(50%) translateY(-50%) rotate(45deg);
+            transform: translateX(50%) translateY(-50%) rotate(45deg);
+            pointer-events: none;
+
+            @circles-color-1: #fff;
+            @circles-color-2: @brand-primary;
+            &::before,
+            &::after {
+              position: absolute;
+              bottom: @loading-indicator-size/10;
+              left: @loading-indicator-size/2;
+              display: block;
+              border: 5px solid @circles-color-1;
+              border-radius: 50%;
+              content: '';
+            }
+
+            @big-circle-size: @loading-indicator-size*8/30;
+            &::before {
+              margin-left: -@big-circle-size/2;
+              width: @big-circle-size;
+              height: @big-circle-size;
+              border-right-color: @circles-color-2;
+              border-left-color: @circles-color-2;
+              -webkit-animation: rotation 3s linear infinite;
+              animation: rotation 3s linear infinite;
+            }
+
+            &::after {
+              @small-circle-size: @big-circle-size/2;
+              bottom: 50px;
+              margin-left: -@small-circle-size/2;
+              width: @small-circle-size;
+              height: @small-circle-size;
+              border-top-color: @circles-color-2;
+              border-bottom-color: @circles-color-2;
+              -webkit-animation: rotation 1s linear infinite;
+              animation: rotation 1s linear infinite;
+            }
+
+            @-webkit-keyframes rotation {
+              0% {
+                -webkit-transform: rotate(0deg);
+              }
+              50% {
+                -webkit-transform: rotate(180deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+              }
+            }
+
+            @keyframes rotation {
+              0% {
+                transform: rotate(0deg);
+              }
+              50% {
+                transform: rotate(180deg);
+              }
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+          }
+
+    :markdown
+      As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
+      before our Express server to simulate some network latency:
+
+          # Simulate network latency
+          waitOneSecond = (req, res, next) ->
+            setTimeout next, 1000
+
+          # API routes
+          api.get '/todo', waitOneSecond, (req, res, next) ->
+            res.send toDoList
+
+          api.post '/todo', waitOneSecond, (req, res, next) ->
+            [...]
+            res.send newToDo
+
+          api.del '/todo/:id', waitOneSecond, (req, res, next) ->
+            toDoItem = _.find toDoList, id: parseInt(req.params.id)
+            [...]
+            res.send toDoItem
 
 

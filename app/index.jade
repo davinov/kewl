@@ -23,6 +23,8 @@ html(lang='en', data-ng-app='kewl')
               i.icon.icon-github
               |  Source code on GitHub
 
+    .loading-indicator(ng-show='$root.loading')
+
     main.container(data-ng-view)
 
     :coffeescript
