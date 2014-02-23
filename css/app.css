@@ -7524,6 +7524,84 @@ img {
     transform: rotate(360deg);
   }
 }
+.error {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  border-width: 0 1px 4px 1px;
+  background-color: #ff4136;
+  border-color: #ff1103;
+  color: #ffffff;
+  width: 100%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  z-index: 900;
+  position: fixed;
+  bottom: 10px;
+  margin: auto;
+}
+.error h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.error .alert-link {
+  font-weight: bold;
+}
+.error > p,
+.error > ul {
+  margin-bottom: 0;
+}
+.error > p + p {
+  margin-top: 5px;
+}
+.error a,
+.error .alert-link {
+  font-weight: normal;
+  color: #fff;
+  text-decoration: underline;
+}
+.error hr {
+  border-top-color: #e90d00;
+}
+.error .alert-link {
+  color: #e6e6e6;
+}
+@media (min-width: 768px) {
+  .error {
+    float: left;
+    width: 66.66666666666666%;
+  }
+}
+@media (min-width: 768px) {
+  .error {
+    margin-left: 16.666666666666664%;
+  }
+}
+@media (min-width: 992px) {
+  .error {
+    float: left;
+    width: 50%;
+  }
+}
+@media (min-width: 992px) {
+  .error {
+    margin-left: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .error {
+    float: left;
+    width: 33.33333333333333%;
+  }
+}
+@media (min-width: 1200px) {
+  .error {
+    margin-left: 33.33333333333333%;
+  }
+}
 .to-do .mark-as-done {
   display: inline-block;
   margin-bottom: 0;

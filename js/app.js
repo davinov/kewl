@@ -12,7 +12,7 @@ app.config([
     });
     $locationProvider.html5Mode(false);
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    return $httpProvider.interceptors.push('loadingInterceptor');
+    return $httpProvider.interceptors.push('loadingInterceptor', 'errorsInterceptor');
   }
 ]);
 
@@ -30,6 +30,26 @@ app.factory('loadingInterceptor', [
       },
       responseError: function(rejection) {
         $rootScope.loading--;
+        return rejection;
+      }
+    };
+  }
+]);
+
+app.factory('errorsInterceptor', [
+  '$rootScope', '$timeout', function($rootScope, $timeout) {
+    $rootScope.errors = [];
+    return {
+      responseError: function(rejection) {
+        var error;
+        error = {
+          status: rejection.status,
+          message: rejection.data
+        };
+        $rootScope.errors.push(error);
+        $timeout(function() {
+          return $rootScope.errors.shift();
+        }, 5000);
         return rejection;
       }
     };

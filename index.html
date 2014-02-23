@@ -18,6 +18,7 @@
       </div>
     </div>
     <div ng-show="$root.loading" class="loading-indicator"></div>
+    <div ng-repeat="error in $root.errors" ng-cloak class="error"><strong>{{ error.message }}</strong><small class="pull-right">Error {{ error.status }}</small></div>
     <main data-ng-view class="container"></main><script type="text/javascript">
 (function() {
 

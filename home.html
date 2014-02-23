@@ -478,15 +478,82 @@ extension for Chrome.</p>
 
     </div><p>In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
 Let&#39;s handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).</p>
-<p>  app.factory &#39;loadingInterceptor&#39;, [
-  &#39;$rootScope&#39;
-  ($rootScope) -&gt;
-    [...]
-    responseError: (rejection) -&gt;</p>
-<pre><code>  # Do something when recieving an error
-  $rootScope.loading--
-  rejection
-</code></pre><p>  ]</p>
+<pre><code>app.factory &#39;loadingInterceptor&#39;, [
+&#39;$rootScope&#39;
+($rootScope) -&gt;
+  [...]
+  responseError: (rejection) -&gt;
+    # Do something when recieving an error
+    $rootScope.loading--
+    rejection
+]
+</code></pre><h4 id="handling-errors">Handling errors</h4>
+<p>As we&#39;re talking about errors, sometimes, the API is sending some errors that should be displayed to the user:
+identification failures, inexistant object, wrong route...</p>
+<p>E.g, we should return a &#39;bad request&#39; error when trying to mark as done a task that is already done:</p>
+<pre><code>api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
+  toDoItem = _.find toDoList, id: parseInt(req.params.id)
+  return res.send 400, &#39;This task is already done&#39; if toDoItem.done
+  [...]
+</code></pre><p>And a 404 &#39;not found&#39; when the id doesn&#39;t match with any task:</p>
+<pre><code>api.del &#39;/todo/:id&#39;, waitOneSecond, (req, res, next) -&gt;
+  toDoItem = _.find toDoList, id: parseInt(req.params.id)
+  return res.send 404, &#39;No task with the id &#39;+req.params.id if !toDoItem
+  [...]
+</code></pre><p>Now, we just need an interceptor to pass the error to the scope and then display it:</p>
 
+    <tabset>
+      <tab heading="app.coffee">
+        <pre>app.factory 'errorsInterceptor', [
+  '$rootScope', '$timeout'
+  ($rootScope, $timeout) ->
+    $rootScope.errors = []
+    responseError: (rejection) ->
+      error =
+        status: rejection.status
+        message: rejection.data
+      $rootScope.errors.push error
+      $timeout ->
+        $rootScope.errors.shift()
+      , 5000
+      rejection
+]
+
+app.config [
+  '$routeProvider', '$locationProvider', '$httpProvider'
+  ($routeProvider, $locationProvider, $httpProvider) ->
+    [...]
+    # Register intercetors
+    $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
+]
+</pre>
+      </tab>
+      <tab heading="index.jade">
+        <pre>body
+  [...]
+  .error(ng-repeat='error in $root.errors')
+    strong {{ error.message }}
+    small.pull-right Error {{ error.status }}
+  [...]
+  </pre>
+      </tab>
+      <tab heading="app.less">
+        <pre>.error {
+  .alert;
+  .alert-danger;
+  width: 100%;
+  .make-sm-column(8);
+  .make-sm-column-offset(2);
+  .make-md-column(6);
+  .make-md-column-offset(3);
+  .make-lg-column(4);
+  .make-lg-column-offset(4);
+  z-index: 900;
+  position: fixed;
+  bottom: @padding-large-vertical;
+  margin: auto;
+}</pre>
+      </tab>
+    </tabset>
   </li>
 </ol>
