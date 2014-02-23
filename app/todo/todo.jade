@@ -1,6 +1,16 @@
 h1 To do list
 
 accordion
-  accordion-group.to-do(ng-repeat='toDo in toDoList', heading='{{toDo.title}}', ng-class='{done: toDo.done}')
+  accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}')
     accordion-heading {{toDo.title}}
+      button.mark-as-done(ng-click='markAsDone(toDo)')
+        i.icon.icon-check
     {{toDo.details}}
+  accordion-group.to-do.new
+    accordion-heading
+      .row
+        input.title(type='text', placeholder='Add a new task...', ng-model='newToDo.title')
+        button.send(ng-click='addNewToDo()', ng-disabled='sendButtonDisabled')
+          i.icon.icon-plus
+          |  Send
+    textarea(placeholder='More details?', ng-model='newToDo.details')

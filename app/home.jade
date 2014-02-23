@@ -188,7 +188,7 @@ ol
       [ngResource](http://docs.angularjs.org/api/ngResource) provides us a useful `$resource` service to map objects
       described in the API.
 
-      To install ngResource module :
+      To install ngResource module:
 
           bower install angular-resource
           cd vendor
@@ -199,8 +199,8 @@ ol
         Brunch normally uses the `main` attribute from `.bower.json` to detect the file he needs to include in vendors
         (it's the strategy used by the [angular-brunch-seed](https://github.com/scotch/angular-brunch-seed).
         Symlinking the files we want to include seems better to me though as we can inlude other files, control their
-        order (also possible with `before` and `after` tags in brunch's `config.coffee`) and avoid Brunch's warning when
-        a `.bower.json` is missing (often the case!).
+        order (also possible with `before` and `after` attributes in brunch's `config.coffee`) and avoid Brunch's warning when
+        a `.bower.json` is missing (which is often the case).
 
     :markdown
       Let's create a new module `kewl.todo` in our app in a `toDo` folder ([modularized folder
@@ -233,7 +233,7 @@ ol
           h1 To do list
 
           accordion
-          accordion-group.to-do(ng-repeat='toDo in toDoList', heading='{{toDo.title}}', ng-class='{done: toDo.done}')
+          accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}')
             accordion-heading {{toDo.title}}
             {{toDo.details}}
       tab(heading='todo/todo.less')
@@ -248,6 +248,94 @@ ol
             }
           }
 
+    :markdown
+      That handles display of tasks. We still need to create the front-end for POST/DELETE requests:
 
+    tabset
+      tab(heading='todo/todo.coffee')
+        pre.
+          todo.controller 'toDoController', [
+            '$scope', 'ToDoList'
+            ($scope, ToDoList) ->
+              $scope.refreshToDoList = ->
+                $scope.toDoList = ToDoList.query()
+
+              $scope.sendButtonDisabled = false
+              $scope.newToDo =
+                title: ""
+                details: ""
+
+              $scope.addNewToDo = ->
+                $scope.sendButtonDisabled = true
+                ToDoList.save $scope.newToDo, ->
+                  $scope.newToDo =
+                    title: ""
+                    details: ""
+                $scope.sendButtonDisabled = false
+                $scope.refreshToDoList()
+
+              $scope.markAsDone = (toDoItem) ->
+                ToDoList.delete
+                  id: toDoItem.id
+                , ->
+                  $scope.refreshToDoList()
+
+               $scope.refreshToDoList() # Load the to-do list for the first time
+             ]
+      tab(heading='todo/todo.jade')
+        pre.
+          h1 To do list
+
+          accordion
+            accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}')
+              accordion-heading {{toDo.title}}
+                button.mark-as-done(ng-click='markAsDone(toDo)')
+                  i.icon.icon-check
+              {{toDo.details}}
+            accordion-group.to-do.new
+              accordion-heading
+                .row
+                  input.title(type='text', placeholder='Add a new task...', ng-model='newToDo.title')
+                  button.send(ng-click='addNewToDo()', ng-disabled='sendButtonDisabled')
+                    i.icon.icon-plus
+                    |  Send
+              textarea(placeholder='More details?', ng-model='newToDo.details')
+
+      tab(heading='todo/todo.less')
+        pre.
+          .to-do {
+            .mark-as-done {
+              .btn;
+              .btn-success;
+              .pull-right;
+              padding: @padding-xs-vertical/2 @padding-xs-horizontal;
+            }
+
+            &.done {
+              .text-muted;
+              .panel-heading {
+                .text-muted;
+                text-decoration: line-through;
+              }
+            }
+
+            &.new {
+              .title {
+                .form-control;
+                .make-xs-column(8);
+                .make-sm-column(10);
+              }
+            .send {
+                .btn;
+                .btn-primary;
+                .make-xs-column(4);
+                .make-sm-column(1);
+                .make-sm-column-offset(1);
+              }
+            textarea {
+                .form-control;
+              }
+            }
+          }
 
 

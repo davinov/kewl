@@ -1,9 +1,36 @@
 .to-do {
+  .mark-as-done {
+    .btn;
+    .btn-success;
+    .pull-right;
+    padding: @padding-xs-vertical/2 @padding-xs-horizontal;
+  }
+
   &.done {
     .text-muted;
     .panel-heading {
       .text-muted;
       text-decoration: line-through;
+    }
+  }
+
+  &.new {
+    .title {
+      .form-control;
+      .make-xs-column(8);
+      .make-sm-column(10);
+    }
+
+    .send {
+      .btn;
+      .btn-primary;
+      .make-xs-column(4);
+      .make-sm-column(1);
+      .make-sm-column-offset(1);
+    }
+
+    textarea {
+      .form-control;
     }
   }
 }
