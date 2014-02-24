@@ -8,6 +8,7 @@ app.config [
 
     $routeProvider
       .when('/', templateUrl: 'home.html')
+      .when('/walkthrough', templateUrl: 'walkthrough.html')
       .otherwise(redirectTo: '/')
 
     # Allow cross-domain http requests

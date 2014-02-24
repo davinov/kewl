@@ -4,6 +4,26 @@
 @import (less) "@{componentsPath}/highlightjs/styles/default.css";
 @import "overrides";
 
+// http://www.colourlovers.com/palette/1663477/A_Thousand_Rainbows
+@brand-primary: #492d61;
+@brand-success: #61C155;
+@brand-info: #048091;
+@brand-warning: #F2D43F;
+@brand-danger: #D1026C;
+
+@headings-color: @brand-primary;
+@navbar-inverse-brand-color: @brand-danger;
+
+body {
+  margin-top: @navbar-height + @padding-base-vertical;
+}
+
+footer {
+  padding-top: @padding-large-vertical;
+  border-top: solid thin @gray-lighter;
+  color: @gray-light;
+}
+
 .tip {
   .alert;
   .alert-info;
@@ -31,6 +51,7 @@ img {
   position: fixed;
   top: 0;
   right: 0;
+  z-index: 1500;
 
   width: @loading-indicator-size;
   height: @loading-indicator-size;
@@ -116,6 +137,15 @@ img {
   position: fixed;
   bottom: @padding-large-vertical;
   margin: auto;
+}
+
+.introduction, .conclusion {
+  .lead;
+}
+
+.step, .introduction, .conclusion {
+  padding-bottom: @padding-base-vertical;
+  border-bottom: solid thin @gray-lighter;
 }
 
 @import "todo/todo";

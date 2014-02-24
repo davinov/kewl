@@ -9,7 +9,8 @@
     "angular-route": "*",
     "angular-bootstrap": "*",
     "bootswatch": "*",
-    "angular-highlightjs": "~0.2.5"
+    "angular-highlightjs": "*",
+    "angular-resource": "*"
   },
   "devDependencies": {
     "angular-mocks": "*"

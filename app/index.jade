@@ -6,13 +6,20 @@ html(lang='en', data-ng-app='kewl')
     link(rel='icon', type='image/x-icon', href='favicon.ico')
     meta(charset='utf-8')
   body
-    .navbar.navbar-default
+    .navbar.navbar-fixed-top.navbar-inverse
       .container
         a.navbar-brand(href='.') Angular
           i.icon.icon-heart.icon-rotate-90.icon-fw
           |  APIs =
           strong  Kewl
         ul.nav.navbar-nav
+          li
+            a(href='#/walkthrough')
+              i.icon.icon-info-circle
+              |  Walkthrough
+          li.divider
+          li
+            .navbar-text Demo:
           li
             a(href='#/todo')
               i.icon.icon-list
