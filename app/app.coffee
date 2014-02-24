@@ -39,14 +39,18 @@ app.factory 'loadingInterceptor', [
 ]
 
 app.factory 'errorsInterceptor', [
-  '$rootScope', '$timeout'
-  ($rootScope, $timeout) ->
+  '$rootScope', '$timeout', '$location'
+  ($rootScope, $timeout, $location) ->
     $rootScope.errors = []
     responseError: (rejection) ->
       error =
         status: rejection.status
         message: rejection.data
+      error.message = 'The server is not running or your request\'s target is not found' if error.status == 404
       $rootScope.errors.push error
+      $timeout ->
+        $location.path 'authentication'
+      , 1000 if error.status == 401
       $timeout ->
         $rootScope.errors.shift()
       , 5000

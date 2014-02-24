@@ -771,3 +771,21 @@ ol
           [...]
           @import "authentication/authentication";
 
+    :markdown
+      We can finally empowered our `errorsInterceptor` to redirect to authentication page when we're not logged in:
+
+    hljs(language='coffeescript').
+      app.factory 'errorsInterceptor', [
+        '$rootScope', '$timeout', '$location'
+        ($rootScope, $timeout, $location) ->
+          $rootScope.errors = []
+          responseError: (rejection) ->
+            [...]
+            $timeout ->
+              $location.path 'authentication'
+            , 1000 if error.status == 401
+            [...]
+            rejection
+      ]
+
+
