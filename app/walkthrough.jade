@@ -49,7 +49,7 @@ ol
       As Brunch's basic server do, we need to send the user our static files (the Angular frontend).
       After Express's install with `npm install express --save`, we create a new `server/api.coffee` file containing :
 
-    hljs(language='coffeescript', include='"code/server/api-1.coffee"').
+    hljs(language='coffeescript', include='"code/server/api-1.coffee.pre"')
 
     :markdown
       We can than start our server with `./node_modules/.bin/coffee server/api.coffee`.
@@ -64,12 +64,12 @@ ol
       be the only requirement to start the app.
       In Brunch config file `config.coffee`:
 
-    hljs(language='coffeescript', include='"code/config-1.coffee"')
+    hljs(language='coffeescript', include='"code/config-1.coffee.pre"')
 
     :markdown
       And in `server/server.coffee` :
 
-    hljs(language='coffeescript', include='"code/server/server-1.coffee"')
+    hljs(language='coffeescript', include='"code/server/server-1.coffee.pre"')
 
     :markdown
       Now, `brunch watch --server` starts our Express serving our frontend, so the line `api.start()` is no longer
@@ -101,7 +101,7 @@ ol
       Let's implement a very easy example: a ToDo list.
       Consider an array of ToDos like this:
 
-    hljs(language='coffeescript', include='"code/to-do-model.coffee"')
+    hljs(language='coffeescript', include='"code/to-do-model.coffee.pre"')
 
     :markdown
       We need the following routes:
@@ -111,7 +111,7 @@ ol
 
       Express makes easy to create this routes easily:
 
-    hljs(language='coffeescript', include='"code/server/api-2.coffee"')
+    hljs(language='coffeescript', include='"code/server/api-2.coffee.pre"')
 
     .tip
       :markdown
@@ -141,7 +141,7 @@ ol
 
     tabset
       tab(heading='todo/todo.coffee')
-        hljs(language='coffeescript', include='"code/app/todo/todo-1.coffee"')
+        hljs(language='coffeescript', include='"code/app/todo/todo-1.coffee.pre"')
 
       tab(heading='todo/todo.jade')
         pre.
@@ -168,7 +168,7 @@ ol
 
     tabset
       tab(heading='todo/todo.coffee')
-        hljs(language='coffeescript', include='"code/app/todo/todo-2.coffee"')
+        hljs(language='coffeescript', include='"code/app/todo/todo-2.coffee.pre"')
 
       tab(heading='todo/todo.jade')
         pre.
@@ -252,12 +252,12 @@ ol
       #### Implementing a loading indicator
       Interceptors are stored in the `$httpProvider.interceptor`. They are registered using `$httpProvider` like this:
 
-    hljs(language='coffeescript', include='"code/app/app-1.coffee"')
+    hljs(language='coffeescript', include='"code/app/app-1.coffee.pre"')
 
     :markdown
       To implement a loading indicator, we can add to our `app.coffee`:
 
-    hljs(language='coffeescript', include='"code/app/app-2.coffee"')
+    hljs(language='coffeescript', include='"code/app/app-2.coffee.pre"')
 
     :markdown
       The `$rootScope.loading` variable can now be used to display an indicator, like the corner indicator from
@@ -354,13 +354,13 @@ ol
       As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
       before our Express server to simulate some network latency:
 
-    hljs(language='coffeescript', include='"code/server/api-3.coffee"')
+    hljs(language='coffeescript', include='"code/server/api-3.coffee.pre"')
 
     :markdown
       You'll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
       issue by counting the number of request waiting:
 
-    hljs(language='coffeescript', include='"code/app/app-3.coffee"')
+    hljs(language='coffeescript', include='"code/app/app-3.coffee.pre"')
 
     .tip
       :markdown
@@ -372,7 +372,7 @@ ol
       In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
       Let's handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).
 
-    hljs(language='coffeescript', include='"code/app/app-4.coffee"')
+    hljs(language='coffeescript', include='"code/app/app-4.coffee.pre"')
 
     :markdown
       #### Handling errors
@@ -381,19 +381,19 @@ ol
 
       E.g., we should return a 'bad request' error when trying to mark as done a task that is already done:
 
-    hljs(language='coffeescript', include='"code/server/api-4.coffee"')
+    hljs(language='coffeescript', include='"code/server/api-4.coffee.pre"')
 
     :markdown
       And a 404 'not found' when the id doesn't match with any task:
 
-    hljs(language='coffeescript', include='"code/server/api-5.coffee"')
+    hljs(language='coffeescript', include='"code/server/api-5.coffee.pre"')
 
     :markdown
       Now, we just need an interceptor to pass the error to the scope and then display it:
 
     tabset
       tab(heading='app.coffee')
-        hljs(language='coffeescript', include='"code/app/app-5.coffee"')
+        hljs(language='coffeescript', include='"code/app/app-5.coffee.pre"')
 
       tab(heading='index.jade')
         pre.
@@ -429,14 +429,14 @@ ol
 
       This is a really simple authentification management in our `api.coffee` server:
 
-    hljs(language='coffeescript', include='"code/server/api-6.coffee"')
+    hljs(language='coffeescript', include='"code/server/api-6.coffee.pre"')
 
     :markdown
       And a simple module using `$http` to provide log in and log out buttons:
 
     tabset
       tab(heading='authentication/authentication.coffee')
-        hljs(language='coffeescript', include='"code/app/authentication/authentication.coffee"')
+        hljs(language='coffeescript', include='"code/app/authentication/authentication.coffee.pre"')
 
       tab(heading='authentication/authentication.jade')
         pre.
@@ -483,7 +483,7 @@ ol
           }
 
       tab(heading='app.coffee')
-        hljs(language='coffeescript', include='"code/app/app-6.coffee"')
+        hljs(language='coffeescript', include='"code/app/app-6.coffee.pre"')
 
       tab(heading='app.less')
         pre.
@@ -493,7 +493,7 @@ ol
     :markdown
       We can finally empowered our `errorsInterceptor` to redirect to authentication page when we're not logged in:
 
-    hljs(language='coffeescript', include='"code/app/app-7.coffee"')
+    hljs(language='coffeescript', include='"code/app/app-7.coffee.pre"')
 
 .conclusion
   p.

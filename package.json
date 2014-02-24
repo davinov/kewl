@@ -2,9 +2,9 @@
   "name": "kewl",
   "version": "1.0.0",
   "scripts": {
-    "postinstall": "bower install && brunch build --production",
-    "start": "brunch watch --server",
-    "test": "karma start karma.coffee"
+    "postinstall": "./node_modules/.bin/bower install && ./node_modules/.bin/brunch build --production",
+    "start": "./node_modules/.bin/brunch watch --server",
+    "test": "./node_modules/.bin/karma start karma.coffee"
   },
   "dependencies": {
     "coffee-script": "*",
