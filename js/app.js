@@ -7,6 +7,8 @@ app.config([
   '$routeProvider', '$locationProvider', '$httpProvider', 'hljsServiceProvider', function($routeProvider, $locationProvider, $httpProvider, hljsServiceProvider) {
     $routeProvider.when('/', {
       templateUrl: 'home.html'
+    }).when('/walkthrough', {
+      templateUrl: 'walkthrough.html'
     }).otherwise({
       redirectTo: '/'
     });
@@ -39,7 +41,7 @@ app.factory('loadingInterceptor', [
 ]);
 
 app.factory('errorsInterceptor', [
-  '$rootScope', '$timeout', function($rootScope, $timeout) {
+  '$rootScope', '$timeout', '$location', function($rootScope, $timeout, $location) {
     $rootScope.errors = [];
     return {
       responseError: function(rejection) {
@@ -48,7 +50,15 @@ app.factory('errorsInterceptor', [
           status: rejection.status,
           message: rejection.data
         };
+        if (error.status === 404) {
+          error.message = 'The server is not running or your request\'s target is not found';
+        }
         $rootScope.errors.push(error);
+        if (error.status === 401) {
+          $timeout(function() {
+            return $location.path('authentication');
+          }, 1000);
+        }
         $timeout(function() {
           return $rootScope.errors.shift();
         }, 5000);
