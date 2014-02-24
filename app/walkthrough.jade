@@ -49,32 +49,7 @@ ol
       As Brunch's basic server do, we need to send the user our static files (the Angular frontend).
       After Express's install with `npm install express --save`, we create a new `server/api.coffee` file containing :
 
-    hljs(language='coffeescript').
-      express = require 'express'
-      path = require 'path'
-
-      # Configuration
-      api = express()
-      api.set 'title', 'Kewl'
-
-      # Frontend static files
-      api.use express.static path.join __dirname, '../public'
-      api.get '/', (req, res) ->
-        res.sendfile 'index.html',
-        root: path.join __dirname, '../_client'
-
-      # API routes
-      # Will come later!
-
-      # Functions to start and stop the server
-      api.start = (port = 3333, path, callback) ->
-        api.listen port, callback
-        console.log 'Server listening at port ' + port
-      api.stop = (callback) ->
-        api.close callback
-
-      # Starting our server
-      api.start()
+    hljs(language='coffeescript', include='"code/server/api-1.coffee"').
 
     :markdown
       We can than start our server with `./node_modules/.bin/coffee server/api.coffee`.
@@ -89,20 +64,12 @@ ol
       be the only requirement to start the app.
       In Brunch config file `config.coffee`:
 
-    hljs(language='coffeescript').
-      exports.config =
-        server:
-          path: 'server/server.coffee'
+    hljs(language='coffeescript', include='"code/config-1.coffee"')
 
     :markdown
       And in `server/server.coffee` :
 
-    hljs(language='coffeescript').
-          # Called by brunch --server
-          api = require './api'
-          module.exports =
-            startServer: api.start
-            stopServer: api.stop
+    hljs(language='coffeescript', include='"code/server/server-1.coffee"')
 
     :markdown
       Now, `brunch watch --server` starts our Express serving our frontend, so the line `api.start()` is no longer
@@ -134,23 +101,7 @@ ol
       Let's implement a very easy example: a ToDo list.
       Consider an array of ToDos like this:
 
-    hljs(language='coffeescript').
-      [
-          id: 0
-          title: 'Buy chocolates'
-          details: 'Prefer the ones without liquor'
-          done: false
-        ,
-          id: 1
-          title: 'Buy flowers'
-          details: 'She prefers yellow ones'
-          done: false
-        ,
-          id: 2
-          title: 'Write a note'
-          details: 'To be put in the flowers'
-          done: true
-      ]
+    hljs(language='coffeescript', include='"code/to-do-model.coffee"')
 
     :markdown
       We need the following routes:
@@ -160,32 +111,7 @@ ol
 
       Express makes easy to create this routes easily:
 
-    hljs(language='coffeescript').
-      _ = require "lodash" # Needed for _.find method
-
-      # Configuration
-      api.use express.bodyParser() # Populates req.body
-
-      # To do storage
-      id = 2
-      toDoList = []
-
-      # API routes
-      api.get '/todo', (req, res, next) ->
-        res.send toDoList
-
-      api.post '/todo', (req, res, next) ->
-        newToDo = req.body
-        newToDo.done = false
-        id = id+1
-        newToDo.id = id
-        toDoList.push newToDo
-        res.send newToDo
-
-      api.del '/todo/:id', (req, res, next) ->
-        toDoItem = _.find toDoList, id: parseInt(req.params.id)
-        toDoItem.done = true
-        res.send toDoItem
+    hljs(language='coffeescript', include='"code/server/api-2.coffee"')
 
     .tip
       :markdown
@@ -198,10 +124,8 @@ ol
       described in the API.
 
       To install ngResource module:
-    hljs(language='bash').
-          bower install angular-resource
-          cd vendor
-          ln -s ../bower_components/angular-resource/angular-resource.js 17-angular-resource.js
+
+    hljs(language='bash', include='"code/install-ng-resource.sh"')
 
     .note
       :markdown
@@ -217,26 +141,8 @@ ol
 
     tabset
       tab(heading='todo/todo.coffee')
-        hljs(language='coffeescript').
-          todo = angular.module 'kewl.todo', ['ng', 'ngRoute', 'ui.bootstrap', 'ngResource']
+        hljs(language='coffeescript', include='"code/app/todo/todo-1.coffee"')
 
-          todo.config [
-            '$routeProvider'
-            ($routeProvider) ->
-              $routeProvider
-              .when '/todo', templateUrl: 'todo/todo.html', controller: 'toDoController'
-                ]
-                todo.controller 'toDoController', [
-            '$scope', 'ToDoList'
-            ($scope, ToDoList) ->
-            $scope.toDoList = ToDoList.query()
-          ]
-
-          todo.factory 'ToDoList', [
-              '$resource'
-              ($resource) ->
-                $resource 'todo/:id'
-            ]
       tab(heading='todo/todo.jade')
         pre.
           h1 To do list
@@ -262,35 +168,8 @@ ol
 
     tabset
       tab(heading='todo/todo.coffee')
-        hljs(language='coffeescript').
-          todo.controller 'toDoController', [
-            '$scope', 'ToDoList'
-            ($scope, ToDoList) ->
-              $scope.refreshToDoList = ->
-                $scope.toDoList = ToDoList.query()
+        hljs(language='coffeescript', include='"code/app/todo/todo-2.coffee"')
 
-              $scope.sendButtonDisabled = false
-              $scope.newToDo =
-                title: ""
-                details: ""
-
-              $scope.addNewToDo = ->
-                $scope.sendButtonDisabled = true
-                ToDoList.save $scope.newToDo, ->
-                  $scope.newToDo =
-                    title: ""
-                    details: ""
-                $scope.sendButtonDisabled = false
-                $scope.refreshToDoList()
-
-              $scope.markAsDone = (toDoItem) ->
-                ToDoList.delete
-                  id: toDoItem.id
-                , ->
-                  $scope.refreshToDoList()
-
-               $scope.refreshToDoList() # Load the to-do list for the first time
-             ]
       tab(heading='todo/todo.jade')
         pre.
           h1 To do list
@@ -373,42 +252,12 @@ ol
       #### Implementing a loading indicator
       Interceptors are stored in the `$httpProvider.interceptor`. They are registered using `$httpProvider` like this:
 
-    hljs(language='coffeescript').
-      $provide.factory 'myHttpInterceptor', ->
-        request: (request) ->
-          # Do something when sending the request
-          request
-
-        response: (response) ->
-          # Do something when recieving the response
-          response
-
-      $httpProvider.interceptors.push 'myHttpInterceptor'
+    hljs(language='coffeescript', include='"code/app/app-1.coffee"')
 
     :markdown
       To implement a loading indicator, we can add to our `app.coffee`:
 
-    hljs(language='coffeescript').
-      app.factory 'loadingInterceptor', [
-        '$rootScope'
-        ($rootScope) ->
-          request: (request) ->
-            # Do something when sending the request
-            $rootScope.loading = true
-            request
-          response: (response) ->
-            # Do something when recieving the response
-            $rootScope.loading = false
-            response
-      ]
-
-      app.config [
-        '$routeProvider', '$locationProvider', '$httpProvider'
-        ($routeProvider, $locationProvider, $httpProvider) ->
-          [...]
-          # Register loading intercetor
-          $httpProvider.interceptors.push 'loadingInterceptor'
-      ]
+    hljs(language='coffeescript', include='"code/app/app-2.coffee"')
 
     :markdown
       The `$rootScope.loading` variable can now be used to display an indicator, like the corner indicator from
@@ -505,63 +354,25 @@ ol
       As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
       before our Express server to simulate some network latency:
 
-    hljs(language='coffeescript').
-      # Simulate network latency
-      waitOneSecond = (req, res, next) ->
-        setTimeout next, 1000
-
-      # API routes
-      api.get '/todo', waitOneSecond, (req, res, next) ->
-        res.send toDoList
-
-      api.post '/todo', waitOneSecond, (req, res, next) ->
-        [...]
-        res.send newToDo
-
-      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
-        toDoItem = _.find toDoList, id: parseInt(req.params.id)
-        [...]
-        res.send toDoItem
+    hljs(language='coffeescript', include='"code/server/api-3.coffee"')
 
     :markdown
       You'll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
       issue by counting the number of request waiting:
 
-    hljs(language='coffeescript').
-      app.factory 'loadingInterceptor', [
-        '$rootScope'
-        ($rootScope) ->
-          $rootScope.loading = 0
-          request: (request) ->
-            # Do something when sending the request
-            $rootScope.loading++
-            request
-          response: (response) ->
-            # Do something when recieving the response
-            $rootScope.loading--
-            response
-      ]
+    hljs(language='coffeescript', include='"code/app/app-3.coffee"')
 
     .tip
       :markdown
         You can visualize variables in scopes by enabling the [AngularJS
-        batarang](https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk)
+        Batarang](https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk)
         extension for Chrome.
 
     :markdown
       In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
       Let's handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).
 
-    hljs(language='coffeescript').
-      app.factory 'loadingInterceptor', [
-      '$rootScope'
-      ($rootScope) ->
-        [...]
-        responseError: (rejection) ->
-          # Do something when recieving an error
-          $rootScope.loading--
-          rejection
-      ]
+    hljs(language='coffeescript', include='"code/app/app-4.coffee"')
 
     :markdown
       #### Handling errors
@@ -570,49 +381,19 @@ ol
 
       E.g., we should return a 'bad request' error when trying to mark as done a task that is already done:
 
-    hljs(language='coffeescript').
-      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
-        toDoItem = _.find toDoList, id: parseInt(req.params.id)
-        return res.send 400, 'This task is already done' if toDoItem.done
-        [...]
+    hljs(language='coffeescript', include='"code/server/api-4.coffee"')
 
     :markdown
       And a 404 'not found' when the id doesn't match with any task:
 
-    hljs(language='coffeescript').
-      api.del '/todo/:id', waitOneSecond, (req, res, next) ->
-        toDoItem = _.find toDoList, id: parseInt(req.params.id)
-        return res.send 404, 'No task with the id '+req.params.id if !toDoItem
-        [...]
+    hljs(language='coffeescript', include='"code/server/api-5.coffee"')
 
     :markdown
       Now, we just need an interceptor to pass the error to the scope and then display it:
 
     tabset
       tab(heading='app.coffee')
-        hljs(language='coffeescript').
-          app.factory 'errorsInterceptor', [
-            '$rootScope', '$timeout'
-            ($rootScope, $timeout) ->
-              $rootScope.errors = []
-              responseError: (rejection) ->
-                error =
-                  status: rejection.status
-                  message: rejection.data
-                $rootScope.errors.push error
-                $timeout ->
-                  $rootScope.errors.shift()
-                , 5000
-                rejection
-          ]
-
-          app.config [
-            '$routeProvider', '$locationProvider', '$httpProvider'
-            ($routeProvider, $locationProvider, $httpProvider) ->
-              [...]
-              # Register intercetors
-              $httpProvider.interceptors.push 'loadingInterceptor', 'errorsInterceptor'
-          ]
+        hljs(language='coffeescript', include='"code/app/app-5.coffee"')
 
       tab(heading='index.jade')
         pre.
@@ -648,75 +429,14 @@ ol
 
       This is a really simple authentification management in our `api.coffee` server:
 
-    hljs(language='coffeescript').
-      # Configuration
-      [...]
-      api.use express.cookieParser()
-      api.use express.cookieSession
-        secret: 'thisIsNotSoSecret'
-
-      # Authentification management
-      api.get '/login', (req, res, next) ->
-        req.session = 'logged in'
-        res.send 'You are authenticated'
-
-      api.get '/logout', (req, res, next) ->
-        req.session = null
-        res.send 'You successfully logged out'
-
-      ensureAuthenticated = (req, res, next) ->
-        return res.send 401, 'You need to log in first' if req.session != 'logged in'
-        next()
-
-      # API routes
-      api.get '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
-        [...]
-
-      api.post '/todo', ensureAuthenticated, waitOneSecond, (req, res, next) ->
-        [...]
-
-      api.del '/todo/:id', ensureAuthenticated, waitOneSecond, (req, res, next) ->
-        [...]
+    hljs(language='coffeescript', include='"code/server/api-6.coffee"')
 
     :markdown
       And a simple module using `$http` to provide log in and log out buttons:
 
     tabset
       tab(heading='authentication/authentication.coffee')
-        hljs(language='coffeescript').
-          auth = angular.module 'kewl.authentication', ['ng', 'ngRoute', 'ui.bootstrap']
-
-          auth.config [
-            '$routeProvider'
-            ($routeProvider) ->
-
-              $routeProvider
-                .when '/authentication', templateUrl: 'authentication/authentication.html', controller: 'authenticationController'
-
-          ]
-
-          auth.controller 'authenticationController', [
-            '$scope', '$http', '$timeout'
-            ($scope, $http, $timeout) ->
-              $scope.messages = []
-              displayMessage = (message) ->
-                $scope.messages.push message
-                $timeout ->
-                  $scope.messages.shift()
-                , 2500
-
-              $scope.login = ->
-                $http
-                  method: 'GET'
-                  url: 'login'
-                .success displayMessage
-
-              $scope.logout = ->
-                $http
-                  method: 'GET'
-                  url: 'logout'
-                .success displayMessage
-          ]
+        hljs(language='coffeescript', include='"code/app/authentication/authentication.coffee"')
 
       tab(heading='authentication/authentication.jade')
         pre.
@@ -763,9 +483,7 @@ ol
           }
 
       tab(heading='app.coffee')
-        hljs(language='coffeescript').
-          app = angular.module 'kewl', ['ng', 'ngRoute', 'ui.bootstrap', 'hljs', 'kewl.todo', 'kewl.authentication']
-          [...]
+        hljs(language='coffeescript', include='"code/app/app-6.coffee"')
 
       tab(heading='app.less')
         pre.
@@ -775,19 +493,7 @@ ol
     :markdown
       We can finally empowered our `errorsInterceptor` to redirect to authentication page when we're not logged in:
 
-    hljs(language='coffeescript').
-      app.factory 'errorsInterceptor', [
-        '$rootScope', '$timeout', '$location'
-        ($rootScope, $timeout, $location) ->
-          $rootScope.errors = []
-          responseError: (rejection) ->
-            [...]
-            $timeout ->
-              $location.path 'authentication'
-            , 1000 if error.status == 401
-            [...]
-            rejection
-      ]
+    hljs(language='coffeescript', include='"code/app/app-7.coffee"')
 
 .conclusion
   p.
@@ -801,4 +507,4 @@ ol
     li modularization:
       small  separate components like the errors interceptor and the loading interceptor into modules
   :markdown
-    Don't hesitate to collaborate on the [GitHub repository](https://github.com/davinov/kewl).
+    Don't hesitate to collaborate on the [GitHub repository](https://github.com/davinov/kewl)!
