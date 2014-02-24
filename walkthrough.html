@@ -36,7 +36,7 @@ The easy syntax of <a href="http://expressjs.com/">Express.js</a> will help us c
 <p>As Brunch&#39;s basic server do, we need to send the user our static files (the Angular frontend).
 After Express&#39;s install with <code>npm install express --save</code>, we create a new <code>server/api.coffee</code> file containing :</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-1.coffee&quot;"></hljs><p>We can than start our server with <code>./node_modules/.bin/coffee server/api.coffee</code>.</p>
+    <hljs language="coffeescript" include="&quot;code/server/api-1.coffee.pre&quot;"></hljs><p>We can than start our server with <code>./node_modules/.bin/coffee server/api.coffee</code>.</p>
 
     <div class="tip"><p>By installing globally CoffeeScript (<code>npm install -g coffeescript</code>), you can use only <code>coffee server/api.coffee</code>.</p>
 
@@ -45,9 +45,9 @@ After Express&#39;s install with <code>npm install express --save</code>, we cre
 be the only requirement to start the app.
 In Brunch config file <code>config.coffee</code>:</p>
 
-    <hljs language="coffeescript" include="&quot;code/config-1.coffee&quot;"></hljs><p>And in <code>server/server.coffee</code> :</p>
+    <hljs language="coffeescript" include="&quot;code/config-1.coffee.pre&quot;"></hljs><p>And in <code>server/server.coffee</code> :</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/server-1.coffee&quot;"></hljs><p>Now, <code>brunch watch --server</code> starts our Express serving our frontend, so the line <code>api.start()</code> is no longer
+    <hljs language="coffeescript" include="&quot;code/server/server-1.coffee.pre&quot;"></hljs><p>Now, <code>brunch watch --server</code> starts our Express serving our frontend, so the line <code>api.start()</code> is no longer
 desired in <code>server/api.coffee</code>.</p>
 <h3 id="some-basic-routes">Some basic routes</h3>
 <p>In this example, we&#39;ll create the most basic REST API of the world: one that handles a list of To Dos.</p>
@@ -71,7 +71,7 @@ When you&#39;re submitting a form, it&#39;s generally a <code>POST</code> reques
     </div><p>Let&#39;s implement a very easy example: a ToDo list.
 Consider an array of ToDos like this:</p>
 
-    <hljs language="coffeescript" include="&quot;code/to-do-model.coffee&quot;"></hljs><p>We need the following routes:</p>
+    <hljs language="coffeescript" include="&quot;code/to-do-model.coffee.pre&quot;"></hljs><p>We need the following routes:</p>
 <ul>
 <li><code>GET /todo</code> will send the list</li>
 <li><code>POST /todo</code> will add an item</li>
@@ -79,7 +79,7 @@ Consider an array of ToDos like this:</p>
 </ul>
 <p>Express makes easy to create this routes easily:</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-2.coffee&quot;"></hljs>
+    <hljs language="coffeescript" include="&quot;code/server/api-2.coffee.pre&quot;"></hljs>
     <div class="tip"><p>API are testable without any frontend with tools like <a href="http://getpostman.com">POSTMAN</a>.</p>
 
     </div><h3 id="angular-way-of-interacting-with-the-api">Angular way of interacting with the API</h3>
@@ -100,7 +100,7 @@ structure</a>):</p>
 
     <tabset>
       <tab heading="todo/todo.coffee">
-        <hljs language="coffeescript" include="&quot;code/app/todo/todo-1.coffee&quot;"></hljs>
+        <hljs language="coffeescript" include="&quot;code/app/todo/todo-1.coffee.pre&quot;"></hljs>
       </tab>
       <tab heading="todo/todo.jade">
         <pre>h1 To do list
@@ -126,7 +126,7 @@ accordion-group.to-do(ng-repeat='toDo in toDoList', ng-class='{done: toDo.done}'
 
     <tabset>
       <tab heading="todo/todo.coffee">
-        <hljs language="coffeescript" include="&quot;code/app/todo/todo-2.coffee&quot;"></hljs>
+        <hljs language="coffeescript" include="&quot;code/app/todo/todo-2.coffee.pre&quot;"></hljs>
       </tab>
       <tab heading="todo/todo.jade">
         <pre>h1 To do list
@@ -202,9 +202,9 @@ requests before and after they&#39;re sent.</p>
 <h4 id="implementing-a-loading-indicator">Implementing a loading indicator</h4>
 <p>Interceptors are stored in the <code>$httpProvider.interceptor</code>. They are registered using <code>$httpProvider</code> like this:</p>
 
-    <hljs language="coffeescript" include="&quot;code/app/app-1.coffee&quot;"></hljs><p>To implement a loading indicator, we can add to our <code>app.coffee</code>:</p>
+    <hljs language="coffeescript" include="&quot;code/app/app-1.coffee.pre&quot;"></hljs><p>To implement a loading indicator, we can add to our <code>app.coffee</code>:</p>
 
-    <hljs language="coffeescript" include="&quot;code/app/app-2.coffee&quot;"></hljs><p>The <code>$rootScope.loading</code> variable can now be used to display an indicator, like the corner indicator from
+    <hljs language="coffeescript" include="&quot;code/app/app-2.coffee.pre&quot;"></hljs><p>The <code>$rootScope.loading</code> variable can now be used to display an indicator, like the corner indicator from
 <a href="http://tympanus.net/Development/CreativeLoadingEffects/">creative loading effects</a>:</p>
 
     <tabset>
@@ -297,10 +297,10 @@ requests before and after they&#39;re sent.</p>
     </tabset><p>As our server is local, we may not have enought time to see the loader is actually working. We can add a delay
 before our Express server to simulate some network latency:</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-3.coffee&quot;"></hljs><p>You&#39;ll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
+    <hljs language="coffeescript" include="&quot;code/server/api-3.coffee.pre&quot;"></hljs><p>You&#39;ll notice that if two request are sent, the first arrived disables the loading indicator. We can solve this
 issue by counting the number of request waiting:</p>
 
-    <hljs language="coffeescript" include="&quot;code/app/app-3.coffee&quot;"></hljs>
+    <hljs language="coffeescript" include="&quot;code/app/app-3.coffee.pre&quot;"></hljs>
     <div class="tip"><p>You can visualize variables in scopes by enabling the <a href="https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk">AngularJS
 Batarang</a>
 extension for Chrome.</p>
@@ -308,18 +308,18 @@ extension for Chrome.</p>
     </div><p>In case of error, the response interceptor function is never called, letting indefinitly the indicator on.
 Let&#39;s handle this case to avoid bad behaviour when serving only the front-end (like on GitHub Pages).</p>
 
-    <hljs language="coffeescript" include="&quot;code/app/app-4.coffee&quot;"></hljs><h4 id="handling-errors">Handling errors</h4>
+    <hljs language="coffeescript" include="&quot;code/app/app-4.coffee.pre&quot;"></hljs><h4 id="handling-errors">Handling errors</h4>
 <p>As we&#39;re talking about errors, sometimes, the API is sending some errors that should be displayed to the user:
 identification failures, inexistant object, wrong route...</p>
 <p>E.g., we should return a &#39;bad request&#39; error when trying to mark as done a task that is already done:</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-4.coffee&quot;"></hljs><p>And a 404 &#39;not found&#39; when the id doesn&#39;t match with any task:</p>
+    <hljs language="coffeescript" include="&quot;code/server/api-4.coffee.pre&quot;"></hljs><p>And a 404 &#39;not found&#39; when the id doesn&#39;t match with any task:</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-5.coffee&quot;"></hljs><p>Now, we just need an interceptor to pass the error to the scope and then display it:</p>
+    <hljs language="coffeescript" include="&quot;code/server/api-5.coffee.pre&quot;"></hljs><p>Now, we just need an interceptor to pass the error to the scope and then display it:</p>
 
     <tabset>
       <tab heading="app.coffee">
-        <hljs language="coffeescript" include="&quot;code/app/app-5.coffee&quot;"></hljs>
+        <hljs language="coffeescript" include="&quot;code/app/app-5.coffee.pre&quot;"></hljs>
       </tab>
       <tab heading="index.jade">
         <pre>body
@@ -352,11 +352,11 @@ identification failures, inexistant object, wrong route...</p>
 <p>APIs sometimes need to autenticate to access some data. If not, a 401 &#39;unauthorized&#39; response is thrown.</p>
 <p>This is a really simple authentification management in our <code>api.coffee</code> server:</p>
 
-    <hljs language="coffeescript" include="&quot;code/server/api-6.coffee&quot;"></hljs><p>And a simple module using <code>$http</code> to provide log in and log out buttons:</p>
+    <hljs language="coffeescript" include="&quot;code/server/api-6.coffee.pre&quot;"></hljs><p>And a simple module using <code>$http</code> to provide log in and log out buttons:</p>
 
     <tabset>
       <tab heading="authentication/authentication.coffee">
-        <hljs language="coffeescript" include="&quot;code/app/authentication/authentication.coffee&quot;"></hljs>
+        <hljs language="coffeescript" include="&quot;code/app/authentication/authentication.coffee.pre&quot;"></hljs>
       </tab>
       <tab heading="authentication/authentication.jade">
         <pre>h1 Authentication
@@ -403,7 +403,7 @@ identification failures, inexistant object, wrong route...</p>
 </pre>
       </tab>
       <tab heading="app.coffee">
-        <hljs language="coffeescript" include="&quot;code/app/app-6.coffee&quot;"></hljs>
+        <hljs language="coffeescript" include="&quot;code/app/app-6.coffee.pre&quot;"></hljs>
       </tab>
       <tab heading="app.less">
         <pre>[...]
@@ -412,7 +412,7 @@ identification failures, inexistant object, wrong route...</p>
       </tab>
     </tabset><p>We can finally empowered our <code>errorsInterceptor</code> to redirect to authentication page when we&#39;re not logged in:</p>
 
-    <hljs language="coffeescript" include="&quot;code/app/app-7.coffee&quot;"></hljs>
+    <hljs language="coffeescript" include="&quot;code/app/app-7.coffee.pre&quot;"></hljs>
   </li>
 </ol>
 <div class="conclusion">

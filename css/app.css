@@ -7569,8 +7569,8 @@ footer {
   border: 1px solid transparent;
   border-radius: 4px;
   border-width: 0 1px 4px 1px;
-  background-color: #ffffa5;
-  border-color: #ffec8b;
+  background-color: #f7e487;
+  border-color: #f5c86f;
   color: #555555;
 }
 .note h4 {
@@ -7594,7 +7594,7 @@ footer {
   text-decoration: underline;
 }
 .note hr {
-  border-top-color: #ffe872;
+  border-top-color: #f4bf57;
 }
 .note .alert-link {
   color: #3c3c3c;
